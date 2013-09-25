@@ -99,14 +99,14 @@ public class CellDrawableView extends View {
 	}
 	
 	/**
-	 * Resets the cells state to neutral.
+	 * Resets the cell's state to neutral.
 	 */
 	void reset() {
 		setState(NEUTRAL);
 	}
 	
 	/**
-	 * Sets the cells state.
+	 * Sets the cell's state.
 	 * 
 	 * @param newState New state.
 	 */
