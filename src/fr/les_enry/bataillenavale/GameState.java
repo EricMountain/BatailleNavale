@@ -7,30 +7,46 @@ import android.util.Log;
 import android.widget.Button;
 
 public class GameState {
-	
+	/** Tag for logs. **/
 	private static final String TAG = "GameState";
 	
+	/** List of players in the game. */
 	private List<Player> players = new ArrayList<Player>();
 
+	/** Index of player that must place a ship or take a shot. */
 	private int currentPlayer = 1;
 	
 	//TODO Get rid of this singleton
+	/** Global game state. */
 	private static final GameState gameState = new GameState();
 	
+	/** Game board. */
 	private List<CellDrawableView> board = new ArrayList<CellDrawableView>();
 	
+	/** Reference to the "OK" button. */
 	private Button actionButton = null;
 	
+	/** True if player can take a shot in this view, false o/w. */
 	private boolean isPlayerViewShootable = false;
 	
+	/** Rows on the board. */
 	static final int NB_ROWS = 10;
+	/**Columns on the board. */
 	static final int NB_COLS = 10;
 	
+	/**
+	 * Initialises game state with 2 players.
+	 */
 	GameState() {
 		players.add(new Player("Player 1"));
 		players.add(new Player("Player 2"));
 	}
 	
+	/**
+	 * Gets the game state singleton.
+	 * 
+	 * @return singleton.
+	 */
 	static GameState getGameState() {
 		if (gameState == null) {
 			throw new RuntimeException("GameState is null - did not expect that!"); 
@@ -38,6 +54,9 @@ public class GameState {
 		return gameState;
 	}
 	
+	/**
+	 * Starts a new game.
+	 */
 	void resetGame() {
 		for (Player player : players) {
 			player.resetPlayer();
@@ -45,14 +64,30 @@ public class GameState {
 		currentPlayer = 1;
 	}
 	
+	/**
+	 * Adds a player.
+	 * 
+	 * @param player
+	 */
+	//TODO not used?
 	void addPlayer(Player player) {
 		players.add(player);
 	}
 	
+	/**
+	 * Gets the player that must take a shot or place a ship.
+	 * 
+	 * @return current player.
+	 */
 	Player getCurrentPlayer() {
 		return players.get(currentPlayer);
 	}
 	
+	/**
+	 * Gets the current player's opponent.
+	 * 
+	 * @return opponent.
+	 */
 	Player getOpponent() {
 		return players.get(1 - currentPlayer);
 	}
@@ -74,11 +109,17 @@ public class GameState {
 		actionButton.setClickable(false);
 		
 		// Default view presented to user is one they can shoot on
+		//TODO Redundant with updateCellsWithPlayerShots above?
 		this.isPlayerViewShootable = true;
 		
 		return getCurrentPlayer();
 	}
 	
+	/**
+	 * Finds out which is the next player to place a ship.
+	 * 
+	 * @return next player to place a ship, or null if none.
+	 */
 	Player getNextToPlace() {
 		Player player = testNextToPlace();
 		
@@ -89,14 +130,13 @@ public class GameState {
 	}
 	
 	/**
-	 * Check to see which is the next player to place a ship.
+	 * Checks to see which is the next player to place a ship.
 	 * 
 	 * @return player that needs to place a ship, or null if nothing to place.
 	 */
 	Player testNextToPlace() {
 		for (Player player : players) {
 			if (player.hasShipsToPlace()) {
-				//updateCells(player);
 				return player;
 			}
 		}
@@ -104,10 +144,18 @@ public class GameState {
 		return null;
 	}
 	
+	/**
+	 * Adds a cell to the board.
+	 * 
+	 * @param cell Cell to add.
+	 */
 	void addCell(CellDrawableView cell) {
 		board.add(cell);
 	}
 	
+	/**
+	 * Clears all cells on the board to neutral state.
+	 */
 	private void resetCells() {
 		for (CellDrawableView cell : board) {
 			cell.reset();
@@ -192,6 +240,11 @@ public class GameState {
 		
 	}
 
+	/**
+	 * Stores a reference to the action button on the GUI.
+	 * 
+	 * @param actionButton
+	 */
 	void setActionButton(Button actionButton) {
 		this.actionButton = actionButton;
 	}
@@ -217,10 +270,13 @@ public class GameState {
 		
 		return shipHit;
 	}
-	
+
+	/**
+	 * Checks if the player can take a shot in the current view mode (own ships vs shots taken).
+	 * 
+	 * @return true if the player can shoot in this view, false otherwise.
+	 */
 	boolean isPlayerViewShootable() {
 		return isPlayerViewShootable;
 	}
-
-
 }
