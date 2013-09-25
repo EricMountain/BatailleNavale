@@ -19,11 +19,11 @@ import android.widget.TextView;
 //TODO Nicer buttons
 //TODO Game icon
 //TODO Animations
-//TODO New game
 //TODO Setup (sound on/off, animations on/off)
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO High scores
 //TODO Exit activity, save state when leaving activity, and restore
+//TODO Handle back button properly
 //TODO Refactor all logic including driving of the HCI into GameState
 //TODO Sounds
 //TODO Setup theme colours properly, not using hardcodes on layout and TextView colours
@@ -34,8 +34,6 @@ import android.widget.TextView;
  */
 public class BatailleNavale extends Activity {
 
-	//static BatailleNavale currentActivity = null;
-	
 	private GameState gameState = GameState.getGameState();
 	
 	TextView actionTextView = null;
@@ -45,9 +43,6 @@ public class BatailleNavale extends Activity {
         super.onCreate(savedInstanceState);
     
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        
-        // TODO Must be a better way to set this up?
-        //currentActivity = this;
         
         setContentView(R.layout.activity_bataille_navale);
 
