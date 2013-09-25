@@ -6,6 +6,9 @@ import java.util.List;
 import android.util.Log;
 import android.widget.Button;
 
+/**
+ * Represents current game state.
+ */
 public class GameState {
 	/** Tag for logs. **/
 	private static final String TAG = "GameState";
