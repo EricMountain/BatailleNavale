@@ -52,7 +52,6 @@ public class BatailleNavale extends Activity {
         for (int row = 0; row < GameState.NB_ROWS; row++) {
         	TableRow tableRow = new TableRow(this);
         	for (int column = 0; column < GameState.NB_COLS; column++) {
-        		// i is row, j is col
         		CellDrawableView cell = new CellDrawableView(this, row, column);
         		tableRow.addView(cell);
         		gameState.addCell(cell);
