@@ -1,5 +1,9 @@
 package fr.les_enry.bataillenavale;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -38,6 +42,8 @@ public class CellDrawableView extends View {
 	static final int SHIP = 3;
 	static final int SUNK = 4;
 
+	private static final Map<Integer,Integer> state2Colour;
+	
 	/**
 	 * Area we draw into.
 	 */
@@ -56,6 +62,17 @@ public class CellDrawableView extends View {
 	 * Current cell state (neutral, hit, miss...).
 	 */
 	private int state = 0;
+	
+	static {
+		Map<Integer,Integer> tmp = new HashMap<Integer,Integer>();
+		tmp.put(NEUTRAL, Color.GRAY);
+		tmp.put(HIT, Color.RED);
+		tmp.put(MISS, Color.BLUE);
+		tmp.put(SHIP, Color.GREEN);
+		tmp.put(SUNK, Color.MAGENTA);
+		state2Colour = Collections.unmodifiableMap(tmp);
+	}
+	
 	
 	/**
 	 * Constructor.
@@ -82,20 +99,7 @@ public class CellDrawableView extends View {
 	 * @return Colour.
 	 */
 	private int getColour() {
-		switch (state) {
-		case NEUTRAL:
-			return Color.GRAY;
-		case HIT:
-			return Color.RED;
-		case MISS:
-			return Color.BLUE;
-		case SHIP:
-			return Color.GREEN;
-		case SUNK:
-			return Color.MAGENTA;
-		default:
-			throw new RuntimeException("Invalid CellDrawableView state: " + state);
-		}
+		return state2Colour.get(state);
 	}
 	
 	/**
