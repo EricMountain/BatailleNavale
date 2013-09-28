@@ -14,6 +14,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+//TODO Handle screen rotation
+//TODO Handle landscape size coorectly
+//TODO Make messages more meaningful
+//TODO Option to end game
+
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
@@ -126,23 +131,3 @@ public class BatailleNavale extends Activity {
     }
     
 }
-
-
-
-//SVG svg = SVGParser.getSVGFromResource(getResources(), R.raw.drawing);
-// Get a drawable from the parsed SVG and set it as the drawable for the ImageView
-//ImageView imageView = (ImageView) findViewById(R.id.imageView1);
-//imageView.setImageDrawable(svg.createPictureDrawable());
-
-/*
-RelativeLayout layout = new RelativeLayout(this);
-layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-		RelativeLayout.LayoutParams.MATCH_PARENT));
-
-TextView textView = new TextView(this);
-textView.setText("Player 1");
-textView.setLayoutParams(new LayoutParams(
-		LayoutParams.MATCH_PARENT,
-		LayoutParams.WRAP_CONTENT));
-layout.addView(textView);
-*/
