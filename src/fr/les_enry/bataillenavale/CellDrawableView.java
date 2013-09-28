@@ -35,14 +35,7 @@ public class CellDrawableView extends View {
 	 */
 	private static final int DUMMY_INITIAL_SIZE = 10;
 	
-	// TODO Make enum
-	static final int NEUTRAL = 0;
-	static final int HIT = 1;
-	static final int MISS = 2;
-	static final int SHIP = 3;
-	static final int SUNK = 4;
-
-	private static final Map<Integer,Integer> state2Colour;
+	private static final Map<CellState,Integer> state2Colour;
 	
 	/**
 	 * Area we draw into.
@@ -58,18 +51,20 @@ public class CellDrawableView extends View {
 	 */
 	private final Cell cell;
 	
+	enum CellState {NEUTRAL, HIT, MISS, SHIP, SUNK};
+	
 	/**
 	 * Current cell state (neutral, hit, miss...).
 	 */
-	private int state = 0;
+	private CellState state = CellState.NEUTRAL;
 	
 	static {
-		Map<Integer,Integer> tmp = new HashMap<Integer,Integer>();
-		tmp.put(NEUTRAL, Color.GRAY);
-		tmp.put(HIT, Color.RED);
-		tmp.put(MISS, Color.BLUE);
-		tmp.put(SHIP, Color.GREEN);
-		tmp.put(SUNK, Color.MAGENTA);
+		Map<CellState,Integer> tmp = new HashMap<CellState,Integer>();
+		tmp.put(CellState.NEUTRAL, Color.GRAY);
+		tmp.put(CellState.HIT, Color.RED);
+		tmp.put(CellState.MISS, Color.BLUE);
+		tmp.put(CellState.SHIP, Color.GREEN);
+		tmp.put(CellState.SUNK, Color.MAGENTA);
 		state2Colour = Collections.unmodifiableMap(tmp);
 	}
 	
@@ -106,7 +101,7 @@ public class CellDrawableView extends View {
 	 * Resets the cell's state to neutral.
 	 */
 	void reset() {
-		setState(NEUTRAL);
+		setState(CellState.NEUTRAL);
 	}
 	
 	/**
@@ -114,7 +109,7 @@ public class CellDrawableView extends View {
 	 * 
 	 * @param newState New state.
 	 */
-	void setState(int newState) {
+	void setState(CellState newState) {
 		state = newState;
 		drawableArea.getPaint().setColor(getColour());
 		invalidate();
@@ -188,7 +183,7 @@ public class CellDrawableView extends View {
     	if (player != null) {
     		try {
     			player.addShipToCell(cell);
-    			setState(SHIP);
+    			setState(CellState.SHIP);
 
     			// Automatically update boat to place
     			Player player2 = gameState.testNextToPlace();
@@ -219,15 +214,15 @@ public class CellDrawableView extends View {
 
     			if (shipHit != null) {
     				if (shipHit.checkSunk()) {
-    					setState(SUNK);
+    					setState(CellState.SUNK);
     					gameState.updateCellsWithPlayerShots(gameState.getCurrentPlayer());
     					displayToast(shipHit + " sunk!");
     				} else {
-    					setState(HIT);
+    					setState(CellState.HIT);
     					displayToast(shipHit + " hit!");
     				}
     			} else {
-    				setState(MISS);
+    				setState(CellState.MISS);
     				displayToast("Missed!");
     			}
 

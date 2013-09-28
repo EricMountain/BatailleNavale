@@ -15,10 +15,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 //TODO Handle screen rotation
-//TODO Handle landscape size coorectly
+//TODO Handle landscape size correctly
 //TODO Make messages more meaningful
 //TODO Option to end game
+//TODO i18n
 
+//TODO Timeout if no activity and let the screen turn off + save state and be able to restore it
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons

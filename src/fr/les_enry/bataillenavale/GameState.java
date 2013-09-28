@@ -184,22 +184,22 @@ public class GameState {
 		Player opponent = this.getOpponent();
 		for (Shot shot : opponent.getShotsFired()) {
 			int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-			board.get(cellOffset).setState(CellDrawableView.MISS);			
+			board.get(cellOffset).setState(CellDrawableView.CellState.MISS);			
 		}
 		
 		// Show state of own ships
 		for (Ship ship : allShips) {
 			for (Cell shipCoordinates : ship.getCoordinates()) {
 				int cellOffset = shipCoordinates.getRow() * NB_COLS + shipCoordinates.getColumn();
-				board.get(cellOffset).setState(CellDrawableView.SHIP);
+				board.get(cellOffset).setState(CellDrawableView.CellState.SHIP);
 			}
 
 			boolean isSunk = ship.checkSunk();
-			int color = isSunk ? CellDrawableView.SUNK : CellDrawableView.HIT;
+			CellDrawableView.CellState state = isSunk ? CellDrawableView.CellState.SUNK : CellDrawableView.CellState.HIT;
 
 			for (Shot shot : ship.getHits()) {
 				int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-				board.get(cellOffset).setState(color);
+				board.get(cellOffset).setState(state);
 			}						
 		}
 		
@@ -221,7 +221,7 @@ public class GameState {
 
 		for (Shot shot : player.getShotsFired()) {
 			int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-			board.get(cellOffset).setState(CellDrawableView.MISS);			
+			board.get(cellOffset).setState(CellDrawableView.CellState.MISS);			
 		}
 		
 		Player opponent = getOpponent();
@@ -230,11 +230,11 @@ public class GameState {
 		allShips.addAll(opponent.getShipsSunk());
 		for (Ship opponentShip : allShips) {
 			boolean isSunk = opponentShip.checkSunk();
-			int color = isSunk ? CellDrawableView.SUNK : CellDrawableView.HIT;
+			CellDrawableView.CellState state = isSunk ? CellDrawableView.CellState.SUNK : CellDrawableView.CellState.HIT;
 			
 			for (Shot shot : opponentShip.getHits()) {
 				int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-				board.get(cellOffset).setState(color);			
+				board.get(cellOffset).setState(state);			
 			}
 		}
 		
