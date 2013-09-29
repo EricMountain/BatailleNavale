@@ -168,7 +168,7 @@ public class CellDrawableView extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		//TODO fix event handling
-		// For the time being, only deal with UP events
+		// For the time being, only deal with "up" events
 		int action = event.getActionMasked();
 		Log.d(TAG, "MotionEvent: " + event);
 		if (action != MotionEvent.ACTION_UP
@@ -206,9 +206,7 @@ public class CellDrawableView extends View {
 
     		Player current = gameState.getCurrentPlayer();
     		Player opponent = gameState.getOpponent();
-    		//Shot shot = new Shot(coordinates.getRow(), coordinates.getColumn());
     		try {
-    			//Ship shipHit = gameState.getCurrentPlayer().fireShot(shot, opponent);
     			Ship shipHit = gameState.fireShot(shot);
     			Log.d(TAG, (shipHit == null ? "Shot was a miss" : "Shot hit ship " + shipHit));
 
