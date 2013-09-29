@@ -187,16 +187,12 @@ public class CellDrawableView extends View {
 
     			// Automatically update boat to place
     			Player player2 = gameState.testNextToPlace();
-    			if (player2 != null) {
-    				if (player2 == player) {
-    					player2 = gameState.getNextToPlace();
-    					((BatailleNavale) getContext()).actionTextView.setText(player2.getName() + " place " + player2.getShipToPlace());	
-    				} else {
-    					displayToast("Press OK so next player can place their ships.");
-    					((BatailleNavale) getContext()).actionTextView.setText(player.getName() + " ships placed.  Press OK.");
-    				}
+    			if (player2 != null && player2 == player) {
+    				player2 = gameState.getNextToPlace();
+    				((BatailleNavale) getContext()).actionTextView.setText(player2.getName() + " place " + player2.getShipToPlace());	
     			} else {
-    				displayToast("Press OK to start game.");
+    				displayToast("Press OK when ready.");
+    				((BatailleNavale) getContext()).actionTextView.setText(player.getName() + " ships placed.  Press OK.");
     			}
     		} catch (BadPlacementException e) {
     			displayToast("Can't place the ship there.");
