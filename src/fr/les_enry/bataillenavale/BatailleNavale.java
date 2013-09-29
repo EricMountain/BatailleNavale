@@ -49,8 +49,9 @@ public class BatailleNavale extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+        	                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_bataille_navale);
 
         TableLayout tableLayout = (TableLayout) this.findViewById(R.id.TableLayout);
