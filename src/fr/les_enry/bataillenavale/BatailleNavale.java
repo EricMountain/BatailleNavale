@@ -62,10 +62,6 @@ public class BatailleNavale extends Activity {
 
         setContentView(R.layout.activity_bataille_navale);
 
-//        TableLayout tableLayout = (TableLayout) this.findViewById(R.id.TableLayout);
-//        tableLayout.setStretchAllColumns(true);  
-//        tableLayout.setShrinkAllColumns(true);  
-    	
         gameState.clearBoard();
         
         FrameLayout squareFrameLayout = new FrameLayout(this) {
@@ -98,62 +94,27 @@ public class BatailleNavale extends Activity {
         parent.removeView(frameLayout);
         parent.addView(squareFrameLayout, frameLayoutIndex);
 
+        // TODO Need to adjust these params before assigning them to make sur the frame is square in landscape 
+        squareFrameLayout.setLayoutParams(frameLayout.getLayoutParams());
+        
         squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
-        
-        //frameLayout.addView(squareFrameLayout);
-        
-//        LinearLayout verticalLayout = new LinearLayout(this);
-//        frameLayout.addView(verticalLayout);
         
         TableLayout tableLayout = new TableLayout(this);
         squareFrameLayout.addView(tableLayout);
-//        frameLayout.addView(tableLayout);
         tableLayout.setWeightSum(1f);
         tableLayout.setStretchAllColumns(true);  
         tableLayout.setShrinkAllColumns(true);  
-//        ((LinearLayout.LayoutParams) tableLayout.getLayoutParams()).width = LayoutParams.WRAP_CONTENT;
-//        ((LinearLayout.LayoutParams) tableLayout.getLayoutParams()).height = LayoutParams.WRAP_CONTENT;
-        frameLayout.getLayoutParams().width = LayoutParams.FILL_PARENT;
-        frameLayout.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        
-        //verticalLayout.setVerticalScrollBarEnabled(false);
-//        verticalLayout.setOrientation(LinearLayout.VERTICAL);
-        //((LinearLayout.LayoutParams) verticalLayout.getLayoutParams()).gravity = Gravity.TOP;
-//        verticalLayout.setGravity(Gravity.TOP);
-//        verticalLayout.setWeightSum(1);
+
         for (int row = 0; row < GameState.NB_ROWS; row++) {
-//        	LinearLayout horizontalLayout = new LinearLayout(this);
-//        	verticalLayout.addView(horizontalLayout);
-//        	horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-//        	horizontalLayout.setWeightSum(1);
-//        	((LinearLayout.LayoutParams) horizontalLayout.getLayoutParams()).weight = .1f;
-//        	((LinearLayout.LayoutParams) horizontalLayout.getLayoutParams()).gravity = Gravity.LEFT;
-//        	horizontalLayout.setGravity(Gravity.LEFT);
         	TableRow tableRow = new TableRow(this);
         	tableLayout.addView(tableRow);
         	((LinearLayout.LayoutParams) tableRow.getLayoutParams()).weight = .1f;
-//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-//        											  LayoutParams.WRAP_CONTENT));
-//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-//					  LayoutParams.MATCH_PARENT));
-//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-//                  LayoutParams.MATCH_PARENT, (float) 0.1));
         	for (int column = 0; column < GameState.NB_COLS; column++) {
-//        		LinearLayout cellLayout = new LinearLayout(this);
-//        		horizontalLayout.addView(cellLayout);
-//        		cellLayout.setWeightSum(1);
-//        		cellLayout.setOrientation(LinearLayout.VERTICAL);
-//        		((LinearLayout.LayoutParams) cellLayout.getLayoutParams()).weight = .1f;
-//        		((LinearLayout.LayoutParams) cellLayout.getLayoutParams()).gravity = Gravity.LEFT;
         		CellDrawableView cell = new CellDrawableView(this, row, column);
         		tableRow.addView(cell);
-//        		cell.getLayoutParams().width = 0;
         		((TableRow.LayoutParams) cell.getLayoutParams()).weight = .1f;
-//        		cellLayout.addView(cell);
         		gameState.addCell(cell);
         	}
-//        	tableLayout.addView(tableRow);
-//        	Log.d(TAG, "Added row " + row);
         }
                
         Button button = (Button) findViewById(R.id.actionButton);
