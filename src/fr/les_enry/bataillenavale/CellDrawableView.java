@@ -8,11 +8,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 // TODO implement missing constructor(s)
@@ -35,6 +38,7 @@ public class CellDrawableView extends View {
 	 */
 	private static final int DUMMY_INITIAL_SIZE = 10;
 	
+	/** Maps a state to the colour used to represent it. */ 
 	private static final Map<CellState,Integer> state2Colour;
 	
 	/**
@@ -42,8 +46,13 @@ public class CellDrawableView extends View {
 	 */
 	private ShapeDrawable drawableArea;
 
-	private static int NOT_SET;
+	/** Constant for width/height not set. */
+	private static final int NOT_SET = 10;
+	
+	/** Drawable area width. */
 	private int width = NOT_SET;
+	
+	/** Drawable area height. */
 	private int height = NOT_SET;
 	
 	/**
@@ -82,10 +91,9 @@ public class CellDrawableView extends View {
 		this.cell = new Cell(row, col);
 		
 		//TODO Do this later in the game?  Is there a callback that can be used after
-		// measurement takes place?
+		// measurement takes place? onLayout()?
 		drawableArea = new ShapeDrawable(new RectShape());
 		drawableArea.getPaint().setColor(getColour());
-		drawableArea.setBounds(PADDING, PADDING, width - PADDING, height - PADDING);
 	}
 
 	/**
@@ -122,43 +130,41 @@ public class CellDrawableView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		
-		/* OLD: Next 2 work. */
-//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//		setMeasuredDimension(x + width, y + height);
+		int newWidth = computeSize(widthMeasureSpec, true);
+		int newHeight = computeSize(heightMeasureSpec, false);
 
-//		Log.d(TAG, "onMeasure: modeW: "
-//				+ Util.measureSpecModeToString(widthMeasureSpec)
-//				+ "/" + MeasureSpec.getSize(widthMeasureSpec)
-//				+ ", modeH: "
-//				+ Util.measureSpecModeToString(heightMeasureSpec)
-//				+ "/" + MeasureSpec.getSize(heightMeasureSpec));
+		width = height = Math.min(newWidth, newHeight);
 		
-		width = computeSize(widthMeasureSpec);
-		//height = computeSize(heightMeasureSpec);
-		height = width;
-		
-		setMeasuredDimension(width, height);
-		
-		drawableArea.setBounds(PADDING, PADDING, width - PADDING, height - PADDING);
+		//Log.d(TAG, "New size: " + width + ", " + height + " - " + cell);
+				
+		int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getMode(widthMeasureSpec), width);
+		int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getMode(heightMeasureSpec), height);
+
+		//TODO move to onLayout()
+		drawableArea.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
+
+		super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 	}
 
 	/**
 	 * Computes height/width of a cell based on input measure spec.
 	 * 
 	 * @param measureSpec
+	 * @param isWidth True if computing size of width, false if height.
 	 */
-	private int computeSize(int measureSpec) {
+	private int computeSize(int measureSpec, boolean isWidth) {
 		int size = Integer.MIN_VALUE;
 		
-		// Figure out width
 		switch (MeasureSpec.getMode(measureSpec)) {
 		case MeasureSpec.UNSPECIFIED:
-			size = DUMMY_INITIAL_SIZE; // TODO Fix this dummy value
+			size = (isWidth ? this.getSuggestedMinimumWidth() : this.getSuggestedMinimumHeight());
 			break;
 		case MeasureSpec.AT_MOST:
 		case MeasureSpec.EXACTLY:
 			size = MeasureSpec.getSize(measureSpec);
+			break;
+		default:
+			Log.e(TAG, "Unknown MeasureSpec mode: " + MeasureSpec.getMode(measureSpec));
 		}
 		
 		return size;
@@ -170,7 +176,7 @@ public class CellDrawableView extends View {
 		//TODO fix event handling
 		// For the time being, only deal with "up" events
 		int action = event.getActionMasked();
-		Log.d(TAG, "MotionEvent: " + event);
+//		Log.d(TAG, "MotionEvent: " + event);
 		if (action != MotionEvent.ACTION_UP
 				&& action != MotionEvent.ACTION_POINTER_UP) {
 			return true;

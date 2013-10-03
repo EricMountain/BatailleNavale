@@ -68,6 +68,13 @@ public class GameState {
 	}
 	
 	/**
+	 * Clears the board of all existing cells.
+	 */
+	void clearBoard() {
+		board.clear();
+	}
+	
+	/**
 	 * Adds a player.
 	 * 
 	 * @param player

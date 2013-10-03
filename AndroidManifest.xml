@@ -9,6 +9,13 @@
         android:targetSdkVersion="10" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+    <supports-screens android:resizeable="true"
+              android:smallScreens="true"
+              android:normalScreens="true"
+              android:largeScreens="true"
+              android:xlargeScreens="true"
+              android:anyDensity="true" />
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -25,5 +32,5 @@
             </intent-filter>
         </activity>
     </application>
-
+    
 </manifest>

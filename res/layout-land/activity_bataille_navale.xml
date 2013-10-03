@@ -9,40 +9,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BatailleNavale" >
 
-    <TextView
-        android:id="@+id/actionTextView"
+    <Button
+        android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="&lt;&lt;Info line>>"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#FFFFFFFF" />
+        android:layout_alignLeft="@+id/ViewOwnCheckBox"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="OK" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp" >
+        android:layout_alignBottom="@+id/actionButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/ViewOwnCheckBox" >
+
     </FrameLayout>
 
     <CheckBox
         android:id="@+id/ViewOwnCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/frameLayout"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/actionButton"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="22dp"
         android:text="View own board"
         android:textAppearance="?android:attr/textAppearanceInverse"
         android:textColor="#ffffffff" />
 
-    <Button
-        android:id="@+id/actionButton"
+    <TextView
+        android:id="@+id/actionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ViewOwnCheckBox"
-        android:layout_alignLeft="@+id/ViewOwnCheckBox"
-        android:layout_alignRight="@+id/frameLayout"
-        android:text="OK" />
+        android:layout_alignRight="@+id/ViewOwnCheckBox"
+        android:layout_alignTop="@+id/frameLayout"
+        android:layout_toRightOf="@+id/frameLayout"
+        android:text="&lt;&lt;Info line>>"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFFFF" />
 
 </RelativeLayout>

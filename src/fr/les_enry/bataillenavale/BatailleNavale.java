@@ -4,18 +4,22 @@ package fr.les_enry.bataillenavale;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+//import android.widget.GridLayout; // API Level 14
 
-//TODO Handle screen rotation
-//TODO Handle landscape size correctly
 //TODO Make messages more meaningful
 //TODO Option to end game
 //TODO i18n
@@ -40,6 +44,10 @@ import android.widget.TextView;
  * 
  */
 public class BatailleNavale extends Activity {
+	/**
+	 * Logging tag.
+	 */
+	private static final String TAG = "BatailleNavale";
 
 	private GameState gameState = GameState.getGameState();
 	
@@ -54,17 +62,98 @@ public class BatailleNavale extends Activity {
 
         setContentView(R.layout.activity_bataille_navale);
 
-        TableLayout tableLayout = (TableLayout) this.findViewById(R.id.TableLayout);
+//        TableLayout tableLayout = (TableLayout) this.findViewById(R.id.TableLayout);
+//        tableLayout.setStretchAllColumns(true);  
+//        tableLayout.setShrinkAllColumns(true);  
+    	
+        gameState.clearBoard();
+        
+        FrameLayout squareFrameLayout = new FrameLayout(this) {
+        	@Override
+        	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        		final int size;
+        		final int mode = MeasureSpec.getMode(widthMeasureSpec); // Assume both modes identical
+        		switch (mode) {
+        		case MeasureSpec.UNSPECIFIED:
+        			size = Math.min(this.getSuggestedMinimumWidth(), this.getSuggestedMinimumHeight());
+        			break;
+        		case MeasureSpec.AT_MOST:
+        		case MeasureSpec.EXACTLY:
+        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+        			break;
+        		default:
+        			Log.e(TAG, "Unknown MeasureSpec mode: " + MeasureSpec.getMode(widthMeasureSpec));
+        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+        		}
+
+        		final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
+        		super.onMeasure(squareSpec, squareSpec);
+        	}
+        	
+        };
+
+        FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout);
+        ViewGroup parent = (ViewGroup) frameLayout.getParent();
+        int frameLayoutIndex = parent.indexOfChild(frameLayout);
+        parent.removeView(frameLayout);
+        parent.addView(squareFrameLayout, frameLayoutIndex);
+
+        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
+        
+        //frameLayout.addView(squareFrameLayout);
+        
+//        LinearLayout verticalLayout = new LinearLayout(this);
+//        frameLayout.addView(verticalLayout);
+        
+        TableLayout tableLayout = new TableLayout(this);
+        squareFrameLayout.addView(tableLayout);
+//        frameLayout.addView(tableLayout);
+        tableLayout.setWeightSum(1f);
         tableLayout.setStretchAllColumns(true);  
         tableLayout.setShrinkAllColumns(true);  
+//        ((LinearLayout.LayoutParams) tableLayout.getLayoutParams()).width = LayoutParams.WRAP_CONTENT;
+//        ((LinearLayout.LayoutParams) tableLayout.getLayoutParams()).height = LayoutParams.WRAP_CONTENT;
+        frameLayout.getLayoutParams().width = LayoutParams.FILL_PARENT;
+        frameLayout.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        
+        //verticalLayout.setVerticalScrollBarEnabled(false);
+//        verticalLayout.setOrientation(LinearLayout.VERTICAL);
+        //((LinearLayout.LayoutParams) verticalLayout.getLayoutParams()).gravity = Gravity.TOP;
+//        verticalLayout.setGravity(Gravity.TOP);
+//        verticalLayout.setWeightSum(1);
         for (int row = 0; row < GameState.NB_ROWS; row++) {
+//        	LinearLayout horizontalLayout = new LinearLayout(this);
+//        	verticalLayout.addView(horizontalLayout);
+//        	horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+//        	horizontalLayout.setWeightSum(1);
+//        	((LinearLayout.LayoutParams) horizontalLayout.getLayoutParams()).weight = .1f;
+//        	((LinearLayout.LayoutParams) horizontalLayout.getLayoutParams()).gravity = Gravity.LEFT;
+//        	horizontalLayout.setGravity(Gravity.LEFT);
         	TableRow tableRow = new TableRow(this);
+        	tableLayout.addView(tableRow);
+        	((LinearLayout.LayoutParams) tableRow.getLayoutParams()).weight = .1f;
+//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+//        											  LayoutParams.WRAP_CONTENT));
+//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+//					  LayoutParams.MATCH_PARENT));
+//        	tableRow.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+//                  LayoutParams.MATCH_PARENT, (float) 0.1));
         	for (int column = 0; column < GameState.NB_COLS; column++) {
+//        		LinearLayout cellLayout = new LinearLayout(this);
+//        		horizontalLayout.addView(cellLayout);
+//        		cellLayout.setWeightSum(1);
+//        		cellLayout.setOrientation(LinearLayout.VERTICAL);
+//        		((LinearLayout.LayoutParams) cellLayout.getLayoutParams()).weight = .1f;
+//        		((LinearLayout.LayoutParams) cellLayout.getLayoutParams()).gravity = Gravity.LEFT;
         		CellDrawableView cell = new CellDrawableView(this, row, column);
         		tableRow.addView(cell);
+//        		cell.getLayoutParams().width = 0;
+        		((TableRow.LayoutParams) cell.getLayoutParams()).weight = .1f;
+//        		cellLayout.addView(cell);
         		gameState.addCell(cell);
         	}
-        	tableLayout.addView(tableRow);
+//        	tableLayout.addView(tableRow);
+//        	Log.d(TAG, "Added row " + row);
         }
                
         Button button = (Button) findViewById(R.id.actionButton);
