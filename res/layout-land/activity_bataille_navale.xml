@@ -25,7 +25,7 @@
         android:layout_alignBottom="@+id/actionButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/ViewOwnCheckBox" >
+        android:background="#ffffff" >
 
     </FrameLayout>
 
@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/ViewOwnCheckBox"
         android:layout_alignTop="@+id/frameLayout"
-        android:layout_toRightOf="@+id/frameLayout"
         android:text="&lt;&lt;Info line>>"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FFFFFFFF" />

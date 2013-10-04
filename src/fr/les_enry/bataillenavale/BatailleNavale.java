@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,9 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-//import android.widget.GridLayout; // API Level 14
 
-//TODO Make messages more meaningful
 //TODO Option to end game
 //TODO i18n
 
@@ -85,19 +82,15 @@ public class BatailleNavale extends Activity {
         		final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
         		super.onMeasure(squareSpec, squareSpec);
         	}
-        	
         };
-
+        
         FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout);
         ViewGroup parent = (ViewGroup) frameLayout.getParent();
         int frameLayoutIndex = parent.indexOfChild(frameLayout);
         parent.removeView(frameLayout);
         parent.addView(squareFrameLayout, frameLayoutIndex);
-
-        // TODO Need to adjust these params before assigning them to make sur the frame is square in landscape 
-        squareFrameLayout.setLayoutParams(frameLayout.getLayoutParams());
-        
-        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
+ 
+//        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
         
         TableLayout tableLayout = new TableLayout(this);
         squareFrameLayout.addView(tableLayout);

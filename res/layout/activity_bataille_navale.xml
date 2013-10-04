@@ -9,40 +9,66 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BatailleNavale" >
 
-    <TextView
-        android:id="@+id/actionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="&lt;&lt;Info line>>"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#FFFFFFFF" />
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp" >
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
     </FrameLayout>
 
-    <CheckBox
-        android:id="@+id/ViewOwnCheckBox"
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/frameLayout"
         android:layout_alignParentBottom="true"
-        android:text="View own board"
-        android:textAppearance="?android:attr/textAppearanceInverse"
-        android:textColor="#ffffffff" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
-    <Button
-        android:id="@+id/actionButton"
+        <CheckBox
+            android:id="@+id/ViewOwnCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/actionButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="View own board"
+            android:textAppearance="?android:attr/textAppearanceInverse"
+            android:textColor="#ffffffff" />
+
+        <Button
+            android:id="@+id/actionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="OK" />
+    </RelativeLayout>
+
+    <android.widget.Space
+        android:id="@+id/space1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ViewOwnCheckBox"
-        android:layout_alignLeft="@+id/ViewOwnCheckBox"
-        android:layout_alignRight="@+id/frameLayout"
-        android:text="OK" />
+        android:layout_centerHorizontal="true" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/RelativeLayout1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <TextView
+            android:id="@+id/actionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="&lt;&lt;Info line>>"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFFFF" />
+    </FrameLayout>
 
 </RelativeLayout>
