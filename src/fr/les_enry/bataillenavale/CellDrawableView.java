@@ -32,12 +32,6 @@ public class CellDrawableView extends View {
 	 */
 	private static final int PADDING = 1;
 	
-	/**
-	 * Size to be requested initially for the drawable area.  Dummy value, since 
-	 * the whole idea is that the UI will tell us what size we can be.
-	 */
-	private static final int DUMMY_INITIAL_SIZE = 10;
-	
 	/** Maps a state to the colour used to represent it. */ 
 	private static final Map<CellState,Integer> state2Colour;
 	
@@ -90,8 +84,6 @@ public class CellDrawableView extends View {
 
 		this.cell = new Cell(row, col);
 		
-		//TODO Do this later in the game?  Is there a callback that can be used after
-		// measurement takes place? onLayout()?
 		drawableArea = new ShapeDrawable(new RectShape());
 		drawableArea.getPaint().setColor(getColour());
 	}
@@ -127,6 +119,14 @@ public class CellDrawableView extends View {
 	protected void onDraw(Canvas canvas) {
 		drawableArea.draw(canvas);
 	}
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		
+		drawableArea.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
+	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -139,9 +139,6 @@ public class CellDrawableView extends View {
 				
 		int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getMode(widthMeasureSpec), width);
 		int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getMode(heightMeasureSpec), height);
-
-		//TODO move to onLayout()
-		drawableArea.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
 
 		super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 	}
@@ -267,4 +264,5 @@ public class CellDrawableView extends View {
 	Cell getCell() {
 		return cell;
 	}
+
 }
