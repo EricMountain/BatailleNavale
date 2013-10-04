@@ -118,10 +118,6 @@ public class GameState {
 		
 		actionButton.setClickable(false);
 		
-		// Default view presented to user is one they can shoot on
-		//TODO Redundant with updateCellsWithPlayerShots above?
-		this.isPlayerViewShootable = true;
-		
 		return getCurrentPlayer();
 	}
 	
