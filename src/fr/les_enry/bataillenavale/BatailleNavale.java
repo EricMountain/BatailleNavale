@@ -138,9 +138,10 @@ public class BatailleNavale extends Activity {
         
         });
         
-        // TODO Refactor
-        // Start ship placement sequence
-        handleButtonClick(button);
+        // Start ship placement sequence unless game is already in progress
+        // e.g. screen rotated
+        if (button.isClickable())
+        	handleButtonClick(button);
     }
 
     // TODO Refactor
@@ -168,7 +169,8 @@ public class BatailleNavale extends Activity {
     		}
     	}
     }
-
+    
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
