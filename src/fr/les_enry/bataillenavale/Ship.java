@@ -169,7 +169,7 @@ class Ship {
 
 	boolean checkSunk() {
 		boolean isSunk = (size == hits.size());
-		Log.d(TAG, this + " is " + (isSunk ? "" : "not") + " sunk");
+		Log.d(TAG, this + " is " + (isSunk ? "sunk" : "afloat"));
 		return isSunk;		
 	}
 
