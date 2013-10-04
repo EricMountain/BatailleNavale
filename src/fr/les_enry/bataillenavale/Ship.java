@@ -24,7 +24,7 @@ class Ship {
 	
 	@Override
 	public String toString() {
-		return type + "[" + size + "]";
+		return type + " [" + size + "]";
 	}
 
 
