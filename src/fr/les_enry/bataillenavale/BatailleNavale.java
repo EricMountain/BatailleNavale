@@ -3,6 +3,9 @@ package fr.les_enry.bataillenavale;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,21 +21,20 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-//TODO Option to end game
 //TODO i18n
+//TODO Exit activity, save state when leaving activity, and restore
+//TODO Refactor all logic including driving of the HCI into GameState
 
 //TODO Timeout if no activity and let the screen turn off + save state and be able to restore it
+//TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
 //TODO Game icon
 //TODO Animations
 //TODO Setup (sound on/off, animations on/off)
-//TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO High scores
-//TODO Exit activity, save state when leaving activity, and restore
 //TODO Handle back button properly
-//TODO Refactor all logic including driving of the HCI into GameState
 //TODO Sounds
 //TODO Setup theme colours properly, not using hardcodes on layout and TextView colours
 
@@ -49,6 +51,8 @@ public class BatailleNavale extends Activity {
 	private GameState gameState = GameState.getGameState();
 	
 	TextView actionTextView = null;
+	
+	private static final int RESET_DIALOG = 1;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +121,15 @@ public class BatailleNavale extends Activity {
             }
         });
         gameState.setActionButton(button);
+
+        Button resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(TAG, "reset button clicked");
+                handleResetButtonClick(v);
+            }
+        });
+        gameState.setActionButton(button);
         
         CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
         //TODO To be handled by GameState
@@ -137,6 +150,8 @@ public class BatailleNavale extends Activity {
 			}
         
         });
+
+        
         
         // Start ship placement sequence unless game is already in progress
         // e.g. screen rotated
@@ -158,6 +173,7 @@ public class BatailleNavale extends Activity {
     		// TODO If opponent has lost, then this is a request to start a new game
     		if (gameState.getOpponent().checkLost()) {
     			// Game is finished, create a new one and start ship placement sequence
+    			//TODO refactor - c.f RESET_DIALOG
     			gameState.resetGame();
     			handleButtonClick(view);
     		} else {
@@ -169,7 +185,10 @@ public class BatailleNavale extends Activity {
     		}
     	}
     }
-    
+
+    void handleResetButtonClick(View view) {
+    	showDialog(RESET_DIALOG);
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,5 +196,31 @@ public class BatailleNavale extends Activity {
         getMenuInflater().inflate(R.menu.bataille_navale, menu);
         return true;
     }
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		switch(id) {
+		case RESET_DIALOG:
+	        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setMessage(R.string.dialog_reset_game)
+	               .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                	   	gameState.resetGame();
+	           				handleButtonClick(null);
+	                   }
+	               })
+	               .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       // Do nowt	                	   
+	                   }
+	               });
+
+	        return builder.create();
+	    	
+    	default:
+	    	return super.onCreateDialog(id);
+		}
+	}
     
 }

@@ -8,4 +8,6 @@
     <string name="ok">OK</string>
     <string name="view_own_board">View own board</string>
     
+    <string name="dialog_reset_game">Reset game?</string>
+
 </resources>
