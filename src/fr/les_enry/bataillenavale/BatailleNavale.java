@@ -22,6 +22,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 //TODO i18n
+//TODO New game should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
 //TODO Refactor all logic including driving of the HCI into GameState
 
