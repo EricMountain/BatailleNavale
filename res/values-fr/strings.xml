@@ -3,5 +3,5 @@
   	<string name="reset">Reset</string>
     <string name="ok">OK</string>
     <string name="view_own_board">Mes bâteaux</string>
-    
+    <string name="player">Joueur</string>
 </resources>

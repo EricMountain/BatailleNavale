@@ -9,5 +9,6 @@
     <string name="view_own_board">View own board</string>
     
     <string name="dialog_reset_game">Reset game?</string>
+    <string name="player">Player</string>
 
 </resources>
