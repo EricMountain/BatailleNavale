@@ -19,6 +19,22 @@ import android.widget.Toast;
 @SuppressLint("ViewConstructor")
 public class CellDrawableView extends View {
 
+	private static Map<CellDrawableView,Integer> cdv2size = new HashMap<CellDrawableView,Integer>();
+	
+//	private int cellSize[10][10];
+	
+	
+	private int avg() {
+		int acc = 0;
+		for (Integer s : cdv2size.values()) {
+			acc += s;
+		}
+		
+		return acc / cdv2size.size();
+	}
+	
+	
+	
 	/**
 	 * Logging tag.
 	 */
@@ -127,10 +143,30 @@ public class CellDrawableView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		
+		
+		Log.d(TAG, "onMeasure input size:  " + 
+				modeStr(widthMeasureSpec) + "/" + MeasureSpec.getSize(widthMeasureSpec) +
+				" … " +
+				modeStr(heightMeasureSpec) + "/" + MeasureSpec.getSize(heightMeasureSpec) + 
+				" - " + cell);
+		
 		int newWidth = computeSize(widthMeasureSpec, true);
 		int newHeight = computeSize(heightMeasureSpec, false);
 
 		width = height = Math.min(newWidth, newHeight);
+		
+		if (width != 0) {
+			cdv2size.put(this, width);
+			int avg = avg();
+			
+//			Log.d(TAG, "Put " + width + ", got avg: " + avg);
+			
+			width = height = avg;
+			cdv2size.put(this, width);
+		}
+		
+		
 		
 		//Log.d(TAG, "New size: " + width + ", " + height + " - " + cell);
 				
@@ -140,6 +176,19 @@ public class CellDrawableView extends View {
 		super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 	}
 
+	private String modeStr(int measureSpec) {
+		switch (MeasureSpec.getMode(measureSpec)) {
+		case MeasureSpec.UNSPECIFIED:
+			return "unspec";
+		case MeasureSpec.AT_MOST:
+			return "atmost";
+		case MeasureSpec.EXACTLY:
+			return "exactly";
+		default:
+			return "unk";
+		}
+	}
+	
 	/**
 	 * Computes height/width of a cell based on input measure spec.
 	 * 
@@ -154,6 +203,8 @@ public class CellDrawableView extends View {
 			size = (isWidth ? this.getSuggestedMinimumWidth() : this.getSuggestedMinimumHeight());
 			break;
 		case MeasureSpec.AT_MOST:
+			size = MeasureSpec.getSize(measureSpec);
+			break;
 		case MeasureSpec.EXACTLY:
 			size = MeasureSpec.getSize(measureSpec);
 			break;

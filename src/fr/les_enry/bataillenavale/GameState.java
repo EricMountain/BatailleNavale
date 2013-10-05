@@ -74,6 +74,10 @@ public class GameState {
 		board.clear();
 	}
 	
+	CellDrawableView getcellDrawableView(int row, int column) {
+		return board.get(row * NB_COLS + column);
+	}
+	
 	/**
 	 * Adds a player.
 	 * 

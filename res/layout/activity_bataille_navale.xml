@@ -9,13 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BatailleNavale" >
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <RelativeLayout
+        android:id="@+id/RelativeLayoutCells"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
-    </FrameLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -54,7 +54,6 @@
             android:layout_alignBottom="@+id/actionButton"
             android:layout_toLeftOf="@+id/actionButton"
             android:text="@string/reset" />
-
     </RelativeLayout>
 
     <android.widget.Space
@@ -79,7 +78,6 @@
             android:text="@string/dummy"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#FFFFFFFF" />
-
     </FrameLayout>
 
 </RelativeLayout>

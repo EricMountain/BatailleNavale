@@ -2,6 +2,8 @@ package fr.les_enry.bataillenavale;
 
 
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,17 +12,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
+//import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
+//import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+//TODO Fix the way the dialog is created to be inline with modern way
 //TODO i18n
 //TODO New game should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
@@ -49,6 +54,9 @@ public class BatailleNavale extends Activity {
 	 */
 	private static final String TAG = "BatailleNavale";
 
+	/** Used for generateId(). */
+	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+	
 	private GameState gameState = GameState.getGameState();
 	
 	TextView actionTextView = null;
@@ -66,7 +74,45 @@ public class BatailleNavale extends Activity {
 
         gameState.clearBoard();
         
-        FrameLayout squareFrameLayout = new FrameLayout(this) {
+//        FrameLayout squareFrameLayout = new FrameLayout(this) {
+//        	@Override
+//        	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        		final int size;
+//        		final int mode = MeasureSpec.getMode(widthMeasureSpec); // Assume both modes identical
+//        		switch (mode) {
+//        		case MeasureSpec.UNSPECIFIED:
+//        			size = Math.min(this.getSuggestedMinimumWidth(), this.getSuggestedMinimumHeight());
+//        			break;
+//        		case MeasureSpec.AT_MOST:
+//        		case MeasureSpec.EXACTLY:
+//        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+//        			break;
+//        		default:
+//        			Log.e(TAG, "Unknown MeasureSpec mode: " + MeasureSpec.getMode(widthMeasureSpec));
+//        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+//        		}
+//
+//        		final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
+//        		super.onMeasure(squareSpec, squareSpec);
+//        	}
+//        };
+        
+//        FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout);
+//        ViewGroup parent = (ViewGroup) frameLayout.getParent();
+//        int frameLayoutIndex = parent.indexOfChild(frameLayout);
+//        parent.removeView(frameLayout);
+        
+        
+//        RelativeLayout relativeLayout = new RelativeLayout(this);
+//        parent.addView(relativeLayout, frameLayoutIndex);
+//        parent.addView(squareFrameLayout, frameLayoutIndex);
+        
+        RelativeLayout relativeLayout = (RelativeLayout) this.findViewById(R.id.RelativeLayoutCells);
+ 
+//        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
+//        relativeLayout.setBackgroundColor(android.graphics.Color.BLUE);
+        
+        TableLayout tableLayout = new TableLayout(this) {
         	@Override
         	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         		final int size;
@@ -88,17 +134,17 @@ public class BatailleNavale extends Activity {
         		super.onMeasure(squareSpec, squareSpec);
         	}
         };
+
+        //        squareFrameLayout.addView(tableLayout);
         
-        FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout);
-        ViewGroup parent = (ViewGroup) frameLayout.getParent();
-        int frameLayoutIndex = parent.indexOfChild(frameLayout);
-        parent.removeView(frameLayout);
-        parent.addView(squareFrameLayout, frameLayoutIndex);
- 
-//        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
+        RelativeLayout.LayoutParams relTableLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        relTableLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        relTableLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        relTableLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        relTableLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         
-        TableLayout tableLayout = new TableLayout(this);
-        squareFrameLayout.addView(tableLayout);
+        relativeLayout.addView(tableLayout, relTableLayoutParams);
+        
         tableLayout.setWeightSum(1f);
         tableLayout.setStretchAllColumns(true);  
         tableLayout.setShrinkAllColumns(true);  
@@ -112,6 +158,31 @@ public class BatailleNavale extends Activity {
         		tableRow.addView(cell);
         		((TableRow.LayoutParams) cell.getLayoutParams()).weight = .1f;
         		gameState.addCell(cell);
+        		
+//        		cell.setId(generateViewId());
+//        		
+//        		RelativeLayout.LayoutParams relLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+//        		if (row == 0) 
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        		if (column == 0)
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        		if (row == GameState.NB_ROWS - 1)
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//        		if (column == GameState.NB_COLS - 1)
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//        		if (row > 0) {
+//        			CellDrawableView cellAbove = gameState.getcellDrawableView(row - 1, column);
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_LEFT, cellAbove.getId());
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_RIGHT, cellAbove.getId());
+//        			relLayoutParams.addRule(RelativeLayout.BELOW, cellAbove.getId());
+//        		}
+//        		if (column > 0) {
+//        			CellDrawableView cellToLeft = gameState.getcellDrawableView(row, column - 1);
+//        			relLayoutParams.addRule(RelativeLayout.RIGHT_OF, cellToLeft.getId());
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_TOP, cellToLeft.getId());
+//        			relLayoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, cellToLeft.getId());
+//        		}
+//        		relativeLayout.addView(cell, relLayoutParams);
         	}
         }
                
@@ -224,4 +295,25 @@ public class BatailleNavale extends Activity {
 		}
 	}
     
+	/**
+	 * Generate a value suitable for use in {@link #setId(int)}.
+	 * This value will not collide with ID values generated at build time by aapt for R.id.
+	 * 
+	 * From http://stackoverflow.com/questions/1714297/android-view-setidint-id-programmatically-how-to-avoid-id-conflicts
+	 *
+	 * TODO Remove once we target minimum API level 17.
+	 *
+	 * @return a generated ID value
+	 */
+	public static int generateViewId() {
+	    for (;;) {
+	        final int result = sNextGeneratedId.get();
+	        // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+	        int newValue = result + 1;
+	        if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+	        if (sNextGeneratedId.compareAndSet(result, newValue)) {
+	            return result;
+	        }
+	    }
+	}
 }
