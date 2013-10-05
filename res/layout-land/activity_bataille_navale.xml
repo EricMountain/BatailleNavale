@@ -16,7 +16,7 @@
         android:layout_alignLeft="@+id/ViewOwnCheckBox"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="OK" />
+        android:text="@string/ok" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -29,17 +29,6 @@
 
     </FrameLayout>
 
-    <CheckBox
-        android:id="@+id/ViewOwnCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/actionButton"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="22dp"
-        android:text="View own board"
-        android:textAppearance="?android:attr/textAppearanceInverse"
-        android:textColor="#ffffffff" />
-
     <TextView
         android:id="@+id/actionTextView"
         android:layout_width="wrap_content"
@@ -49,5 +38,24 @@
         android:text="&lt;&lt;Info line>>"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FFFFFFFF" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/actionButton"
+        android:layout_alignLeft="@+id/actionButton"
+        android:layout_alignRight="@+id/actionButton"
+        android:text="@string/reset" />
+
+    <CheckBox
+        android:id="@+id/ViewOwnCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/resetButton"
+        android:layout_alignParentRight="true"
+        android:text="@string/view_own_board"
+        android:textAppearance="?android:attr/textAppearanceInverse"
+        android:textColor="#ffffffff" />
 
 </RelativeLayout>
