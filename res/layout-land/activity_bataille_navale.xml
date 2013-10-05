@@ -36,7 +36,7 @@
         android:layout_alignLeft="@+id/frameLayout"
         android:layout_alignRight="@+id/ViewOwnCheckBox"
         android:layout_alignTop="@+id/frameLayout"
-        android:text="&lt;&lt;Info line>> bla i lorem ipsum dolor sit amet lorem ipsum"
+        android:text="@string/dummy"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FFFFFFFF" />
 

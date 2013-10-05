@@ -10,5 +10,6 @@
     
     <string name="dialog_reset_game">Reset game?</string>
     <string name="player">Player</string>
+    <string name="dummy">&lt;&lt;Info line>> lorem ipsum dolor sit amet lorem ipsum</string>
 
 </resources>
