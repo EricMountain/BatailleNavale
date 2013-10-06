@@ -73,45 +73,10 @@ public class BatailleNavale extends Activity {
         setContentView(R.layout.activity_bataille_navale);
 
         gameState.clearBoard();
-        
-//        FrameLayout squareFrameLayout = new FrameLayout(this) {
-//        	@Override
-//        	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        		final int size;
-//        		final int mode = MeasureSpec.getMode(widthMeasureSpec); // Assume both modes identical
-//        		switch (mode) {
-//        		case MeasureSpec.UNSPECIFIED:
-//        			size = Math.min(this.getSuggestedMinimumWidth(), this.getSuggestedMinimumHeight());
-//        			break;
-//        		case MeasureSpec.AT_MOST:
-//        		case MeasureSpec.EXACTLY:
-//        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
-//        			break;
-//        		default:
-//        			Log.e(TAG, "Unknown MeasureSpec mode: " + MeasureSpec.getMode(widthMeasureSpec));
-//        			size = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
-//        		}
-//
-//        		final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
-//        		super.onMeasure(squareSpec, squareSpec);
-//        	}
-//        };
-        
-//        FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout);
-//        ViewGroup parent = (ViewGroup) frameLayout.getParent();
-//        int frameLayoutIndex = parent.indexOfChild(frameLayout);
-//        parent.removeView(frameLayout);
-        
-        
-//        RelativeLayout relativeLayout = new RelativeLayout(this);
-//        parent.addView(relativeLayout, frameLayoutIndex);
-//        parent.addView(squareFrameLayout, frameLayoutIndex);
-        
+                
         RelativeLayout relativeLayout = (RelativeLayout) this.findViewById(R.id.RelativeLayoutCells);
- 
-//        squareFrameLayout.setBackgroundColor(android.graphics.Color.BLUE);
-//        relativeLayout.setBackgroundColor(android.graphics.Color.BLUE);
         
+        // Make a square table layout
         TableLayout tableLayout = new TableLayout(this) {
         	@Override
         	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -134,8 +99,6 @@ public class BatailleNavale extends Activity {
         		super.onMeasure(squareSpec, squareSpec);
         	}
         };
-
-        //        squareFrameLayout.addView(tableLayout);
         
         RelativeLayout.LayoutParams relTableLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         relTableLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -158,31 +121,6 @@ public class BatailleNavale extends Activity {
         		tableRow.addView(cell);
         		((TableRow.LayoutParams) cell.getLayoutParams()).weight = .1f;
         		gameState.addCell(cell);
-        		
-//        		cell.setId(generateViewId());
-//        		
-//        		RelativeLayout.LayoutParams relLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//        		if (row == 0) 
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//        		if (column == 0)
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//        		if (row == GameState.NB_ROWS - 1)
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        		if (column == GameState.NB_COLS - 1)
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//        		if (row > 0) {
-//        			CellDrawableView cellAbove = gameState.getcellDrawableView(row - 1, column);
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_LEFT, cellAbove.getId());
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_RIGHT, cellAbove.getId());
-//        			relLayoutParams.addRule(RelativeLayout.BELOW, cellAbove.getId());
-//        		}
-//        		if (column > 0) {
-//        			CellDrawableView cellToLeft = gameState.getcellDrawableView(row, column - 1);
-//        			relLayoutParams.addRule(RelativeLayout.RIGHT_OF, cellToLeft.getId());
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_TOP, cellToLeft.getId());
-//        			relLayoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, cellToLeft.getId());
-//        		}
-//        		relativeLayout.addView(cell, relLayoutParams);
         	}
         }
                
@@ -197,33 +135,26 @@ public class BatailleNavale extends Activity {
         Button resetButton = (Button) findViewById(R.id.resetButton);
         resetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	Log.d(TAG, "reset button clicked");
                 handleResetButtonClick(v);
             }
         });
-        gameState.setActionButton(button);
         
         CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
         //TODO To be handled by GameState
         viewOwnCheckBox.setClickable(false);
         viewOwnCheckBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (isChecked) {
-					// Display own
+					// Display own board
 					gameState.updateCells(gameState.getCurrentPlayer());
 				} else {
 					// Display shots taken
 					gameState.updateCellsWithPlayerShots(gameState.getCurrentPlayer());
 				}
-				
 			}
-        
         });
-
-        
         
         // Start ship placement sequence unless game is already in progress
         // e.g. screen rotated
