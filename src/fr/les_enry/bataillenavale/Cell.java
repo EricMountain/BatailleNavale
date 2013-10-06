@@ -1,17 +1,40 @@
 package fr.les_enry.bataillenavale;
 
-public class Cell {
+/**
+ * Simple cell.
+ */
+class Cell {
+	/** Row coordinate. */
 	private final int row;
+	
+	/** Colmun coordinate. */
 	private final int column;
 	
+	/**
+	 * Constuctor.
+	 * 
+	 * @param row
+	 * @param column
+	 */
 	Cell(int row, int column) {
 		this.row = row;
 		this.column = column;
 	}
 	
+	/**
+	 * Get row.
+	 * 
+	 * @return row
+	 */
 	public int getRow() {
 		return row;
 	}
+	
+	/**
+	 * Get column.
+	 * 
+	 * @return column.
+	 */
 	public int getColumn() {
 		return column;
 	}
@@ -26,6 +49,4 @@ public class Cell {
 	public String toString() {
 		return "(" + row + "," + column +")";
 	}
-	
-	
 }
