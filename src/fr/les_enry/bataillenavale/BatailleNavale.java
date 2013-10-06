@@ -25,13 +25,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+//TODO Full i18n
 //TODO Fix the way the dialog is created to be in line with modern way
-//TODO i18n
-//TODO New game should move to menu
+//TODO "New game"/Reset should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
 //TODO Refactor all logic including driving of the HCI into GameState
-
 //TODO Timeout if no activity and let the screen turn off + save state and be able to restore it
+
+//TODO Reimplement the board as a single View to avoid the whole issue with making a square layout 
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
