@@ -13,15 +13,21 @@ public class GameState {
 	/** Tag for logs. **/
 	private static final String TAG = "GameState";
 	
+	//TODO Get rid of this singleton
+	/** Global game state. */
+	private static final GameState gameState = new GameState();
+	
+	/** Rows on the board. */
+	static final int NB_ROWS = 10;
+	
+	/** Columns on the board. */
+	static final int NB_COLS = 10;
+	
 	/** List of players in the game. */
 	private List<Player> players = new ArrayList<Player>();
 
 	/** Index of player that must place a ship or take a shot. */
 	private int currentPlayer = 1;
-	
-	//TODO Get rid of this singleton
-	/** Global game state. */
-	private static final GameState gameState = new GameState();
 	
 	/** Game board. */
 	private List<CellDrawableView> board = new ArrayList<CellDrawableView>();
@@ -31,11 +37,6 @@ public class GameState {
 	
 	/** True if player can take a shot in this view, false o/w. */
 	private boolean isPlayerViewShootable = false;
-	
-	/** Rows on the board. */
-	static final int NB_ROWS = 10;
-	/**Columns on the board. */
-	static final int NB_COLS = 10;
 	
 	/**
 	 * Initialises game state with 2 players.
@@ -76,16 +77,6 @@ public class GameState {
 	
 	CellDrawableView getcellDrawableView(int row, int column) {
 		return board.get(row * NB_COLS + column);
-	}
-	
-	/**
-	 * Adds a player.
-	 * 
-	 * @param player
-	 */
-	//TODO not used?
-	void addPlayer(Player player) {
-		players.add(player);
 	}
 	
 	/**
