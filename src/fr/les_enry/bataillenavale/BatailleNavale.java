@@ -25,7 +25,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-//TODO Fix the way the dialog is created to be inline with modern way
+//TODO Fix the way the dialog is created to be in line with modern way
 //TODO i18n
 //TODO New game should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
