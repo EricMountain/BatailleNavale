@@ -228,19 +228,80 @@ public class CellDrawableView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO fix event handling
+		// TODO fix event handling to handle "clicks"
+		
 		// For the time being, only deal with "up" events
 		int action = event.getActionMasked();
 		// Log.d(TAG, "MotionEvent: " + event);
-		if (action != MotionEvent.ACTION_UP
-				&& action != MotionEvent.ACTION_POINTER_UP) {
-			return true;
+
+		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+			if (!placeShipOnThisCell())
+				takeShot();
 		}
 
+		return true;
+	}
+
+	/**
+	 * Takes a shot on this cell.
+	 */
+	private void takeShot() {
 		GameState gameState = GameState.getGameState();
 
-		// TODO Refactor and simplify all this
+		Shot shot = new Shot(cell.getRow(), cell.getColumn());
+
+		Player current = gameState.getCurrentPlayer();
+		Player opponent = gameState.getOpponent();
+		try {
+			Ship shipHit = gameState.fireShot(shot);
+			Log.d(TAG, (shipHit == null ? "Shot was a miss" : "Shot hit ship "
+					+ shipHit));
+
+			if (shipHit != null) {
+				if (shipHit.checkSunk()) {
+					setState(CellState.SUNK);
+					gameState.updateCellsWithPlayerShots(gameState
+							.getCurrentPlayer());
+					displayToast(shipHit + " sunk!");
+				} else {
+					setState(CellState.HIT);
+					displayToast(shipHit + " hit!");
+				}
+			} else {
+				setState(CellState.MISS);
+				displayToast("Missed!");
+			}
+
+			if (opponent.checkLost()) {
+				Log.d(TAG, opponent + " has lost");
+
+				displayToast(current.getName() + " has won!");
+				((BatailleNavale) getContext()).actionTextView.setText(current
+						.getName() + " won.  Game over.");
+			} else {
+				((BatailleNavale) getContext()).actionTextView.setText(current
+						.getName() + " turn complete ");
+			}
+		} catch (AlreadyPlayedShotException e) {
+			displayToast("Shot already played.");
+		} catch (AlreadyPlayedException e) {
+			displayToast("Already played, it's " + gameState.getOpponent()
+					+ "'s turn.");
+		} catch (CantShootHereException e) {
+			displayToast("You can't shoot yourself!");
+		}
+	}
+
+	/**
+	 * Checks if we are placing ships, and places part of a boat of this cell if
+	 * it is the case.
+	 * 
+	 * @return true if we're placing ships.
+	 */
+	private boolean placeShipOnThisCell() {
+		GameState gameState = GameState.getGameState();
 		Player player = gameState.getNextToPlace();
+
 		if (player != null) {
 			try {
 				player.addShipToCell(cell);
@@ -262,52 +323,10 @@ public class CellDrawableView extends View {
 			} catch (BadPlacementException e) {
 				displayToast("Can't place the ship there.");
 			}
-		} else {
-			Shot shot = new Shot(cell.getRow(), cell.getColumn());
 
-			Player current = gameState.getCurrentPlayer();
-			Player opponent = gameState.getOpponent();
-			try {
-				Ship shipHit = gameState.fireShot(shot);
-				Log.d(TAG, (shipHit == null ? "Shot was a miss"
-						: "Shot hit ship " + shipHit));
-
-				if (shipHit != null) {
-					if (shipHit.checkSunk()) {
-						setState(CellState.SUNK);
-						gameState.updateCellsWithPlayerShots(gameState
-								.getCurrentPlayer());
-						displayToast(shipHit + " sunk!");
-					} else {
-						setState(CellState.HIT);
-						displayToast(shipHit + " hit!");
-					}
-				} else {
-					setState(CellState.MISS);
-					displayToast("Missed!");
-				}
-
-				if (opponent.checkLost()) {
-					Log.d(TAG, opponent + " has lost");
-
-					displayToast(current.getName() + " has won!");
-					((BatailleNavale) getContext()).actionTextView
-							.setText(current.getName() + " won.  Game over.");
-				} else {
-					((BatailleNavale) getContext()).actionTextView
-							.setText(current.getName() + " turn complete ");
-				}
-			} catch (AlreadyPlayedShotException e) {
-				displayToast("Shot already played.");
-			} catch (AlreadyPlayedException e) {
-				displayToast("Already played, it's " + gameState.getOpponent()
-						+ "'s turn.");
-			} catch (CantShootHereException e) {
-				displayToast("You can't shoot yourself!");
-			}
-		}
-
-		return true;
+			return true;
+		} else
+			return false;
 	}
 
 	/**
