@@ -154,7 +154,7 @@ public class BatailleNavale extends Activity {
         	tableLayout.addView(tableRow);
         	((LinearLayout.LayoutParams) tableRow.getLayoutParams()).weight = .1f;
         	for (int column = 0; column < GameState.NB_COLS; column++) {
-        		CellDrawableView cell = new CellDrawableView(this, row, column);
+        		CellDrawableView cell = new CellDrawableView(this, row, column, GameState.NB_ROWS, GameState.NB_COLS);
         		tableRow.addView(cell);
         		((TableRow.LayoutParams) cell.getLayoutParams()).weight = .1f;
         		gameState.addCell(cell);

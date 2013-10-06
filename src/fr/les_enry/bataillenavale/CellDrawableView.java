@@ -19,21 +19,23 @@ import android.widget.Toast;
 @SuppressLint("ViewConstructor")
 public class CellDrawableView extends View {
 
-	private static Map<CellDrawableView,Integer> cdv2size = new HashMap<CellDrawableView,Integer>();
+	private static int[] cellSize = new int[1];
 	
-//	private int cellSize[10][10];
+	private final int rows, columns;
+	private final int row, column;
 	
-	
-	private int avg() {
+	private int avg2() {
 		int acc = 0;
-		for (Integer s : cdv2size.values()) {
-			acc += s;
+		int count = 0;
+		for (int s : cellSize) {
+			if (s != 0) {
+				acc += s;
+				++count;
+			}
 		}
 		
-		return acc / cdv2size.size();
+		return acc / count;
 	}
-	
-	
 	
 	/**
 	 * Logging tag.
@@ -92,10 +94,17 @@ public class CellDrawableView extends View {
 	 * @param row Row index of this cell in the board's matrix.
 	 * @param col Column index of this cell in the board's matrix.
 	 */
-	public CellDrawableView(Context context, int row, int col) {
+	public CellDrawableView(Context context, int row, int column, int rows, int columns) {
 		super(context);
 
-		this.cell = new Cell(row, col);
+		this.cell = new Cell(row, column);
+		this.row = row;
+		this.column = column;
+		this.rows = rows;
+		this.columns = columns;
+		
+		if (cellSize.length != rows * columns)
+			cellSize = new int[rows * columns];
 		
 		drawableArea = new ShapeDrawable(new RectShape());
 		drawableArea.getPaint().setColor(getColour());
@@ -142,8 +151,7 @@ public class CellDrawableView extends View {
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {		
 		
 		Log.d(TAG, "onMeasure input size:  " + 
 				modeStr(widthMeasureSpec) + "/" + MeasureSpec.getSize(widthMeasureSpec) +
@@ -157,16 +165,10 @@ public class CellDrawableView extends View {
 		width = height = Math.min(newWidth, newHeight);
 		
 		if (width != 0) {
-			cdv2size.put(this, width);
-			int avg = avg();
-			
-//			Log.d(TAG, "Put " + width + ", got avg: " + avg);
-			
-			width = height = avg;
-			cdv2size.put(this, width);
+			int offset = row * columns + column;
+			cellSize[offset] = width;
+			width = height = cellSize[offset] = avg2();	
 		}
-		
-		
 		
 		//Log.d(TAG, "New size: " + width + ", " + height + " - " + cell);
 				

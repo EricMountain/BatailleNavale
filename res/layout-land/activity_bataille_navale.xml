@@ -25,8 +25,8 @@
         android:layout_alignBottom="@+id/actionButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/actionButton"
-        android:background="#ffffff" >
+        android:layout_toLeftOf="@+id/actionTextView"
+        android:background="#000000" >
 
     </RelativeLayout>
 
@@ -53,7 +53,6 @@
         android:id="@+id/actionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ViewOwnCheckBox"
         android:layout_alignRight="@+id/ViewOwnCheckBox"
         android:layout_alignTop="@+id/RelativeLayoutCells"
         android:text="@string/dummy"
