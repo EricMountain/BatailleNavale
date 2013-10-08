@@ -30,7 +30,7 @@ public class GameState {
 	private int currentPlayer = 1;
 	
 	/** Game board. */
-	private List<CellDrawableView> board = new ArrayList<CellDrawableView>();
+	private List<Cell> board = new ArrayList<Cell>();
 	
 	/** Reference to the "OK" button. */
 	private Button actionButton = null;
@@ -75,7 +75,7 @@ public class GameState {
 		board.clear();
 	}
 	
-	CellDrawableView getcellDrawableView(int row, int column) {
+	Cell getCell(int row, int column) {
 		return board.get(row * NB_COLS + column);
 	}
 	
@@ -150,7 +150,7 @@ public class GameState {
 	 * 
 	 * @param cell Cell to add.
 	 */
-	void addCell(CellDrawableView cell) {
+	void addCell(Cell cell) {
 		board.add(cell);
 	}
 	
@@ -158,7 +158,7 @@ public class GameState {
 	 * Clears all cells on the board to neutral state.
 	 */
 	private void resetCells() {
-		for (CellDrawableView cell : board) {
+		for (Cell cell : board) {
 			cell.reset();
 		}
 	}
@@ -182,18 +182,18 @@ public class GameState {
 		Player opponent = this.getOpponent();
 		for (Shot shot : opponent.getShotsFired()) {
 			int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-			board.get(cellOffset).setState(CellDrawableView.CellState.MISS);			
+			board.get(cellOffset).setState(Cell.CellState.MISS);			
 		}
 		
 		// Show state of own ships
 		for (Ship ship : allShips) {
 			for (Cell shipCoordinates : ship.getCoordinates()) {
 				int cellOffset = shipCoordinates.getRow() * NB_COLS + shipCoordinates.getColumn();
-				board.get(cellOffset).setState(CellDrawableView.CellState.SHIP);
+				board.get(cellOffset).setState(Cell.CellState.SHIP);
 			}
 
 			boolean isSunk = ship.checkSunk();
-			CellDrawableView.CellState state = isSunk ? CellDrawableView.CellState.SUNK : CellDrawableView.CellState.HIT;
+			Cell.CellState state = isSunk ? Cell.CellState.SUNK : Cell.CellState.HIT;
 
 			for (Shot shot : ship.getHits()) {
 				int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
@@ -219,7 +219,7 @@ public class GameState {
 
 		for (Shot shot : player.getShotsFired()) {
 			int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
-			board.get(cellOffset).setState(CellDrawableView.CellState.MISS);			
+			board.get(cellOffset).setState(Cell.CellState.MISS);			
 		}
 		
 		Player opponent = getOpponent();
@@ -228,7 +228,7 @@ public class GameState {
 		allShips.addAll(opponent.getShipsSunk());
 		for (Ship opponentShip : allShips) {
 			boolean isSunk = opponentShip.checkSunk();
-			CellDrawableView.CellState state = isSunk ? CellDrawableView.CellState.SUNK : CellDrawableView.CellState.HIT;
+			Cell.CellState state = isSunk ? Cell.CellState.SUNK : Cell.CellState.HIT;
 			
 			for (Shot shot : opponentShip.getHits()) {
 				int cellOffset = shot.getRow() * NB_COLS + shot.getColumn();
