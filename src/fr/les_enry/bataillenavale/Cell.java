@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -219,4 +223,10 @@ class Cell {
 		toast.show();
 	}
 
+	void draw(Canvas canvas, int x1, int y1, int x2, int y2) {
+		Paint paint = new Paint();
+		paint.setColor(getColour());
+		paint.setStyle(Style.FILL);
+		canvas.drawRect(new Rect(x1 + 1, y1 + 1, x2 - 1, y2 - 1), paint);
+	}
 }

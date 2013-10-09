@@ -1,7 +1,5 @@
 package fr.les_enry.bataillenavale;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -53,9 +51,6 @@ public class BatailleNavale extends Activity {
 	 */
 	private static final String TAG = "BatailleNavale";
 
-	/** Used for generateId(). */
-	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-
 	private GameState gameState = GameState.getGameState();
 
 	TextView actionTextView = null;
@@ -78,10 +73,10 @@ public class BatailleNavale extends Activity {
 				.findViewById(R.id.FrameLayout);
 
 		// Make a square table layout
-		FrameLayout squareLayout = new FrameLayout(this) {
+		final FrameLayout squareLayout = new FrameLayout(this) {
 			private int rowStep = 0;
 			private int colStep = 0;
-			
+
 			@Override
 			protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 				final int size;
@@ -140,24 +135,33 @@ public class BatailleNavale extends Activity {
 				for (int x = 0; x <= right; x += colStep) {
 					canvas.drawLine(x, 0, x, bottom, paint);
 				}
+
+				for (Cell c : GameState.getGameState().getBoard()) {
+					c.draw(canvas, c.getColumn() * colStep, c.getRow()
+							* rowStep, (c.getColumn() + 1) * colStep,
+							(c.getRow() + 1) * rowStep);
+				}
 			}
 
 			@Override
 			public boolean onTouchEvent(MotionEvent event) {
 				// TODO fix event handling to handle "clicks"
-				
+
 				// For the time being, only deal with "up" events
 				int action = event.getActionMasked();
 				// Log.d(TAG, "MotionEvent: " + event);
 
-				if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+				if (action == MotionEvent.ACTION_UP
+						|| action == MotionEvent.ACTION_POINTER_UP) {
 					float x = event.getX();
 					float y = event.getY();
 					int row = (int) Math.floor(y / rowStep);
 					int col = (int) Math.floor(x / colStep);
-					Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row + "," + col + " steps: " + rowStep + "," + colStep);
+					Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row
+							+ "," + col + " steps: " + rowStep + "," + colStep);
 					Cell cell = GameState.getGameState().getCell(row, col);
 					cell.handleTouchEvent(this);
+					this.invalidate();
 				}
 
 				return true;
@@ -217,6 +221,7 @@ public class BatailleNavale extends Activity {
 							gameState.updateCellsWithPlayerShots(gameState
 									.getCurrentPlayer());
 						}
+						squareLayout.invalidate();
 					}
 				});
 

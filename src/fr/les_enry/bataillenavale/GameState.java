@@ -75,6 +75,22 @@ public class GameState {
 		board.clear();
 	}
 	
+	/**
+	 * Gets the list of cells.
+	 * 
+	 * @return a reference to the board.
+	 */
+	List<Cell> getBoard() {
+		return board;
+	}
+	
+	/**
+	 * Gets specified cell reference.
+	 * 
+	 * @param row
+	 * @param column
+	 * @return a cell
+	 */
 	Cell getCell(int row, int column) {
 		return board.get(row * NB_COLS + column);
 	}
