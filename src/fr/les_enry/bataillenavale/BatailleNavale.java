@@ -21,7 +21,9 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-//TODO Reimplement the board as a single View to avoid the whole issue with making a square layout 
+//TODO Resetting game: squarelayout inval has no effect
+//TODO Resetting game: view own board needs to be disabled
+//TODO Must not handle touch event after player 1 has placed all ships
 //TODO Full i18n
 //TODO Fix the way the dialog is created to be in line with modern way
 //TODO "New game"/Reset should move to menu
@@ -194,6 +196,7 @@ public class BatailleNavale extends Activity {
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				handleButtonClick(v);
+				squareLayout.invalidate();
 			}
 		});
 		gameState.setActionButton(button);
@@ -202,6 +205,7 @@ public class BatailleNavale extends Activity {
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				handleResetButtonClick(v);
+				squareLayout.invalidate();
 			}
 		});
 
@@ -227,8 +231,10 @@ public class BatailleNavale extends Activity {
 
 		// Start ship placement sequence unless game is already in progress
 		// e.g. screen rotated
-		if (button.isClickable())
+		if (button.isClickable()) {
 			handleButtonClick(button);
+			squareLayout.invalidate();
+		}
 	}
 
 	// TODO Refactor

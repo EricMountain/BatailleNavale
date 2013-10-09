@@ -9,15 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".BatailleNavale" >
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayoutCells"
+    <FrameLayout
+        android:id="@+id/FrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/actionTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
