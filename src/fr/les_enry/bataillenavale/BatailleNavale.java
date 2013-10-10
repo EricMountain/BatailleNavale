@@ -21,8 +21,6 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-//TODO Resetting game: squarelayout inval has no effect
-//TODO Resetting game: view own board needs to be disabled
 //TODO Must not handle touch event after player 1 has placed all ships
 //TODO Full i18n
 //TODO Fix the way the dialog is created to be in line with modern way
