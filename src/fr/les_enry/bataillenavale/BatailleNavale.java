@@ -56,6 +56,7 @@ public class BatailleNavale extends Activity {
 	private GameState gameState = GameState.getGameState();
 
 	TextView actionTextView = null;
+	FrameLayout squareLayout = null;
 
 	private static final int RESET_DIALOG = 1;
 
@@ -75,7 +76,7 @@ public class BatailleNavale extends Activity {
 				.findViewById(R.id.FrameLayout);
 
 		// Make a square table layout
-		final FrameLayout squareLayout = new FrameLayout(this) {
+		squareLayout = new FrameLayout(this) {
 			private int rowStep = 0;
 			private int colStep = 0;
 
@@ -205,7 +206,6 @@ public class BatailleNavale extends Activity {
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				handleResetButtonClick(v);
-				squareLayout.invalidate();
 			}
 		});
 
@@ -290,7 +290,9 @@ public class BatailleNavale extends Activity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									gameState.resetGame();
+									((CheckBox) findViewById(R.id.ViewOwnCheckBox)).setClickable(false);
 									handleButtonClick(null);
+									squareLayout.invalidate();
 								}
 							})
 					.setNegativeButton(android.R.string.no,
