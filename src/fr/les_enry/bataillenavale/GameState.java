@@ -13,7 +13,6 @@ public class GameState {
 	/** Tag for logs. **/
 	private static final String TAG = "GameState";
 	
-	//TODO Get rid of this singleton
 	/** Global game state. */
 	private static final GameState gameState = new GameState();
 	
