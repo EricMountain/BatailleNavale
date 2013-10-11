@@ -271,8 +271,6 @@ public class BatailleNavale extends Activity {
 			actionTextView.setText(player2.getName() + " place "
 					+ player2.getShipToPlace());
 		} else {
-			// TODO If opponent has lost, then this is a request to start a new
-			// game
 			if (gameState.getOpponent().checkLost()) {
 				// Game is finished, create a new one and start ship placement
 				// sequence
