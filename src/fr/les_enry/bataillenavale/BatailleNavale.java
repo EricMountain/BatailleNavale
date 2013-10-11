@@ -3,6 +3,7 @@ package fr.les_enry.bataillenavale;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 //TODO Timeout if no activity and let the screen turn off + save state and be able to restore it
 
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
+//TODO Automated tests
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
@@ -46,6 +48,122 @@ import android.widget.TextView;
  * 
  */
 public class BatailleNavale extends Activity {
+	/**
+	 * Implements a square layout.
+	 */
+	private final class SquareLayout extends FrameLayout {
+		/** Number of pixels between rows. */
+		private int rowStep = 0;
+		/** Number of pixels between columns. */
+		private int colStep = 0;
+
+		/** Pre-allocated painter. */
+		private final Paint boardPaint;
+
+		/**
+		 * Pre-allocated object for calls to canvas.getClipBounds(Rect).
+		 */
+		private Rect viewPort = new Rect();
+
+		/** 
+		 * Constuctor.
+		 * 
+		 * @param context
+		 */
+		private SquareLayout(Context context) {
+			super(context);
+
+			boardPaint = new Paint();
+			boardPaint.setColor(Color.DKGRAY);
+			boardPaint.setStrokeWidth(1.3f);
+		}
+
+		@Override
+		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+			final int size;
+			final int mode = MeasureSpec.getMode(widthMeasureSpec); // Assume
+																	// both
+																	// modes
+																	// identical
+			switch (mode) {
+			case MeasureSpec.UNSPECIFIED:
+				size = Math.min(this.getSuggestedMinimumWidth(),
+						this.getSuggestedMinimumHeight());
+				break;
+			case MeasureSpec.AT_MOST:
+			case MeasureSpec.EXACTLY:
+				size = Math.min(MeasureSpec.getSize(widthMeasureSpec),
+						MeasureSpec.getSize(heightMeasureSpec));
+				break;
+			default:
+				Log.e(TAG,
+						"Unknown MeasureSpec mode: "
+								+ MeasureSpec.getMode(widthMeasureSpec));
+				size = Math.min(MeasureSpec.getSize(widthMeasureSpec),
+						MeasureSpec.getSize(heightMeasureSpec));
+			}
+
+			final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
+
+			super.onMeasure(squareSpec, squareSpec);
+		}
+
+		@Override
+		protected void onDraw(Canvas canvas) {
+			super.onDraw(canvas);
+
+			canvas.getClipBounds(viewPort);
+			Log.d(TAG, canvas.getWidth() + "," + canvas.getHeight() + " - "
+					+ viewPort);
+
+			// Draw grid
+			int right = viewPort.right - viewPort.right % GameState.NB_COLS;
+			int bottom = viewPort.bottom - viewPort.bottom % GameState.NB_ROWS;
+			rowStep = viewPort.bottom / GameState.NB_ROWS;
+			colStep = viewPort.right / GameState.NB_COLS;
+
+			// Draw horizontal lines
+			for (int y = 0; y <= bottom; y += rowStep) {
+				canvas.drawLine(0, y, right, y, boardPaint);
+			}
+
+			// Draw vertical lines
+			for (int x = 0; x <= right; x += colStep) {
+				canvas.drawLine(x, 0, x, bottom, boardPaint);
+			}
+
+			for (Cell c : GameState.getGameState().getBoard()) {
+				c.draw(canvas, c.getColumn() * colStep, c.getRow() * rowStep,
+						(c.getColumn() + 1) * colStep, (c.getRow() + 1)
+								* rowStep);
+			}
+		}
+
+		@Override
+		public boolean onTouchEvent(MotionEvent event) {
+			// TODO fix event handling to handle "clicks"
+
+			// For the time being, only deal with "up" events
+			int action = event.getActionMasked();
+			// Log.d(TAG, "MotionEvent: " + event);
+
+			if (action == MotionEvent.ACTION_UP
+					|| action == MotionEvent.ACTION_POINTER_UP) {
+				float x = event.getX();
+				float y = event.getY();
+				int row = (int) Math.floor(y / rowStep);
+				int col = (int) Math.floor(x / colStep);
+				Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row + ","
+						+ col + " steps: " + rowStep + "," + colStep);
+				Cell cell = GameState.getGameState().getCell(row, col);
+				cell.handleTouchEvent(this);
+				this.invalidate();
+			}
+
+			return true;
+		}
+	}
+
 	/**
 	 * Logging tag.
 	 */
@@ -74,101 +192,7 @@ public class BatailleNavale extends Activity {
 				.findViewById(R.id.FrameLayout);
 
 		// Make a square table layout
-		squareLayout = new FrameLayout(this) {
-			private int rowStep = 0;
-			private int colStep = 0;
-
-			@Override
-			protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-				final int size;
-				final int mode = MeasureSpec.getMode(widthMeasureSpec); // Assume
-																		// both
-																		// modes
-																		// identical
-				switch (mode) {
-				case MeasureSpec.UNSPECIFIED:
-					size = Math.min(this.getSuggestedMinimumWidth(),
-							this.getSuggestedMinimumHeight());
-					break;
-				case MeasureSpec.AT_MOST:
-				case MeasureSpec.EXACTLY:
-					size = Math.min(MeasureSpec.getSize(widthMeasureSpec),
-							MeasureSpec.getSize(heightMeasureSpec));
-					break;
-				default:
-					Log.e(TAG,
-							"Unknown MeasureSpec mode: "
-									+ MeasureSpec.getMode(widthMeasureSpec));
-					size = Math.min(MeasureSpec.getSize(widthMeasureSpec),
-							MeasureSpec.getSize(heightMeasureSpec));
-				}
-
-				final int squareSpec = MeasureSpec.makeMeasureSpec(mode, size);
-
-				super.onMeasure(squareSpec, squareSpec);
-			}
-
-			@Override
-			protected void onDraw(Canvas canvas) {
-				super.onDraw(canvas);
-
-				Paint paint = new Paint();
-				paint.setColor(Color.DKGRAY);
-				paint.setStrokeWidth(1.3f);
-
-				Rect viewPort = canvas.getClipBounds();
-				Log.d(TAG, canvas.getWidth() + "," + canvas.getHeight() + " - "
-						+ canvas.getClipBounds());
-
-				// Draw grid
-				int right = viewPort.right - viewPort.right % GameState.NB_COLS;
-				int bottom = viewPort.bottom - viewPort.bottom
-						% GameState.NB_ROWS;
-				rowStep = viewPort.bottom / GameState.NB_ROWS;
-				colStep = viewPort.right / GameState.NB_COLS;
-
-				// Draw horizontal lines
-				for (int y = 0; y <= bottom; y += rowStep) {
-					canvas.drawLine(0, y, right, y, paint);
-				}
-
-				// Draw vertical lines
-				for (int x = 0; x <= right; x += colStep) {
-					canvas.drawLine(x, 0, x, bottom, paint);
-				}
-
-				for (Cell c : GameState.getGameState().getBoard()) {
-					c.draw(canvas, c.getColumn() * colStep, c.getRow()
-							* rowStep, (c.getColumn() + 1) * colStep,
-							(c.getRow() + 1) * rowStep);
-				}
-			}
-
-			@Override
-			public boolean onTouchEvent(MotionEvent event) {
-				// TODO fix event handling to handle "clicks"
-
-				// For the time being, only deal with "up" events
-				int action = event.getActionMasked();
-				// Log.d(TAG, "MotionEvent: " + event);
-
-				if (action == MotionEvent.ACTION_UP
-						|| action == MotionEvent.ACTION_POINTER_UP) {
-					float x = event.getX();
-					float y = event.getY();
-					int row = (int) Math.floor(y / rowStep);
-					int col = (int) Math.floor(x / colStep);
-					Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row
-							+ "," + col + " steps: " + rowStep + "," + colStep);
-					Cell cell = GameState.getGameState().getCell(row, col);
-					cell.handleTouchEvent(this);
-					this.invalidate();
-				}
-
-				return true;
-			}
-
-		};
+		squareLayout = new SquareLayout(this);
 
 		FrameLayout.LayoutParams squareLayoutParams = new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -288,7 +312,8 @@ public class BatailleNavale extends Activity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									gameState.resetGame();
-									((CheckBox) findViewById(R.id.ViewOwnCheckBox)).setClickable(false);
+									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
+											.setClickable(false);
 									handleButtonClick(null);
 									squareLayout.invalidate();
 								}
