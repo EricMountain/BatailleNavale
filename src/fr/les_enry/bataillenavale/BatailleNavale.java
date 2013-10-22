@@ -220,7 +220,7 @@ public class BatailleNavale extends Activity {
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				handleButtonClick(v);
+				handleActionButtonClick(v);
 			}
 		});
 		gameState.setActionButton(actionButton);
@@ -257,7 +257,7 @@ public class BatailleNavale extends Activity {
 	}
 
 	// TODO Refactor
-	void handleButtonClick(View view) {
+	void handleActionButtonClick(View view) {
 		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
 		viewOwnCheckBox.setChecked(false);
 
@@ -273,7 +273,7 @@ public class BatailleNavale extends Activity {
 				// sequence
 				// TODO refactor - c.f RESET_DIALOG
 				gameState.resetGame();
-				handleButtonClick(view);
+				handleActionButtonClick(view);
 			} else {
 				// This starts and plays the game
 				viewOwnCheckBox.setClickable(true);
@@ -317,7 +317,7 @@ public class BatailleNavale extends Activity {
 									gameState.resetGame();
 									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
 											.setClickable(false);
-									handleButtonClick(null);
+									handleActionButtonClick(null);
 								}
 							})
 					.setNegativeButton(android.R.string.no,

@@ -99,7 +99,7 @@ public class GameState {
 		fsm.rule().initial(INIT).event(START).ok(BOAT_TO_PLACE)
 				.action(new Action() {
 					public boolean act() {
-						batailleNavale.handleButtonClick(null);
+						batailleNavale.handleActionButtonClick(null);
 						return true;
 					}
 				});
