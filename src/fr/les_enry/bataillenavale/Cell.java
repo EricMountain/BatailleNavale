@@ -155,20 +155,20 @@ class Cell {
 				Log.d(TAG, opponent + " has lost");
 
 				displayToast(view, current.getName() + " has won!");
-				((BatailleNavale) view.getContext()).actionTextView
-						.setText(current.getName() + " won.  Game over.");
+				((BatailleNavale) view.getContext()).setActionText(current
+						.getName() + " won.  Game over.");
 			} else {
-				((BatailleNavale) view.getContext()).actionTextView
-						.setText(current.getName() + " turn complete ");
+				((BatailleNavale) view.getContext()).setActionText(current
+						.getName() + " turn complete ");
 			}
 		} catch (AlreadyPlayedShotException e) {
-			 displayToast(view, "Shot already played.");
+			displayToast(view, "Shot already played.");
 		} catch (AlreadyPlayedException e) {
-			 displayToast(view, "Already played, it's " +
-			 gameState.getOpponent()
-			 + "'s turn.");
+			displayToast(view,
+					"Already played, it's " + gameState.getOpponent()
+							+ "'s turn.");
 		} catch (CantShootHereException e) {
-			 displayToast(view, "You can't shoot yourself!");
+			displayToast(view, "You can't shoot yourself!");
 		}
 	}
 
@@ -191,14 +191,12 @@ class Cell {
 				Player player2 = gameState.testNextToPlace();
 				if (player2 != null && player2 == player) {
 					player2 = gameState.getNextToPlace();
-					((BatailleNavale) view.getContext()).actionTextView
-							.setText(player2.getName() + " place "
-									+ player2.getShipToPlace());
+					((BatailleNavale) view.getContext()).setActionText(player2
+							.getName() + " place " + player2.getShipToPlace());
 				} else {
 					displayToast(view, "Press OK when ready.");
-					((BatailleNavale) view.getContext()).actionTextView
-							.setText(player.getName()
-									+ " ships placed.  Press OK.");
+					((BatailleNavale) view.getContext()).setActionText(player
+							.getName() + " ships placed.  Press OK.");
 				}
 			} catch (BadPlacementException e) {
 				displayToast(view, "Can't place the ship there.");

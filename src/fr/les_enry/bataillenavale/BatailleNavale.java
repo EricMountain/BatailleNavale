@@ -54,6 +54,7 @@ public class BatailleNavale extends Activity {
 	private final class SquareLayout extends FrameLayout {
 		/** Number of pixels between rows. */
 		private int rowStep = 0;
+		
 		/** Number of pixels between columns. */
 		private int colStep = 0;
 
@@ -169,10 +170,11 @@ public class BatailleNavale extends Activity {
 	 */
 	private static final String TAG = "BatailleNavale";
 
+	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
 
-	TextView actionTextView = null;
-	FrameLayout squareLayout = null;
+	/** Square frame layout. */
+	private FrameLayout squareLayout = null;
 
 	private static final int RESET_DIALOG = 1;
 
@@ -186,12 +188,12 @@ public class BatailleNavale extends Activity {
 
 		setContentView(R.layout.activity_bataille_navale);
 
+		gameState.setBatailleNavale(this);
 		gameState.clearBoard();
 
 		FrameLayout frameLayout = (FrameLayout) this
 				.findViewById(R.id.FrameLayout);
 
-		// Make a square table layout
 		squareLayout = new SquareLayout(this);
 
 		FrameLayout.LayoutParams squareLayoutParams = new FrameLayout.LayoutParams(
@@ -215,14 +217,13 @@ public class BatailleNavale extends Activity {
 			}
 		}
 
-		Button button = (Button) findViewById(R.id.actionButton);
-		button.setOnClickListener(new View.OnClickListener() {
+		Button actionButton = (Button) findViewById(R.id.actionButton);
+		actionButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				handleButtonClick(v);
-				squareLayout.invalidate();
 			}
 		});
-		gameState.setActionButton(button);
+		gameState.setActionButton(actionButton);
 
 		Button resetButton = (Button) findViewById(R.id.resetButton);
 		resetButton.setOnClickListener(new View.OnClickListener() {
@@ -252,11 +253,7 @@ public class BatailleNavale extends Activity {
 				});
 
 		// Start ship placement sequence unless game is already in progress
-		// e.g. screen rotated
-		if (button.isClickable()) {
-			handleButtonClick(button);
-			squareLayout.invalidate();
-		}
+		gameState.processSoftEvent(GameState.START);
 	}
 
 	// TODO Refactor
@@ -264,7 +261,7 @@ public class BatailleNavale extends Activity {
 		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
 		viewOwnCheckBox.setChecked(false);
 
-		actionTextView = (TextView) findViewById(R.id.actionTextView);
+		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
 
 		Player player2 = gameState.getNextToPlace();
 		if (player2 != null) {
@@ -285,10 +282,18 @@ public class BatailleNavale extends Activity {
 				actionTextView.setText(nextPlayer.getName() + " doit tirer");
 			}
 		}
+		
+		squareLayout.invalidate();
 	}
 
 	void handleResetButtonClick(View view) {
 		showDialog(RESET_DIALOG);
+	}
+	
+	void setActionText(String text) {
+		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
+		
+		actionTextView.setText(text);
 	}
 
 	@Override
@@ -313,7 +318,6 @@ public class BatailleNavale extends Activity {
 									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
 											.setClickable(false);
 									handleButtonClick(null);
-									squareLayout.invalidate();
 								}
 							})
 					.setNegativeButton(android.R.string.no,

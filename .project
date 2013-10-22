@@ -3,6 +3,7 @@
 	<name>BatailleNavale</name>
 	<comment></comment>
 	<projects>
+		<project>MiniFSM</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
