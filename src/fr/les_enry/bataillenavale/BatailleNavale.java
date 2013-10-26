@@ -241,14 +241,7 @@ public class BatailleNavale extends Activity {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						if (isChecked) {
-							// Display own board
-							gameState.updateCells(gameState.getCurrentPlayer());
-						} else {
-							// Display shots taken
-							gameState.updateCellsWithPlayerShots(gameState
-									.getCurrentPlayer());
-						}
+						gameState.updateCells(isChecked);
 						squareLayout.invalidate();
 					}
 				});

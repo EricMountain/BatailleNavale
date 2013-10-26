@@ -257,12 +257,24 @@ public class GameState {
 	}
 
 	/**
+	 * Updates the board cells as requested.
+	 * 
+	 * @param isOwnBoatsView If true, show own boats, o/w show sthots taken.
+	 */
+	void updateCells(boolean isOwnBoatsView) {
+		if (isOwnBoatsView)
+			updateCells(getCurrentPlayer());
+		else
+			updateCellsWithPlayerShots(getCurrentPlayer());
+	}
+	
+	/**
 	 * Draws a player's own boats view.
 	 * 
 	 * @param player
-	 *            Player who's boats to display.
+	 *            Player whose boats to display.
 	 */
-	void updateCells(Player player) {
+	private void updateCells(Player player) {
 		List<Ship> allShips = new ArrayList<Ship>();
 		allShips.addAll(player.getShipsAfloat());
 		allShips.addAll(player.getShipsToPlace());
@@ -307,7 +319,7 @@ public class GameState {
 	 * @param player
 	 *            Player whose shots are to be displayed.
 	 */
-	void updateCellsWithPlayerShots(Player player) {
+	private void updateCellsWithPlayerShots(Player player) {
 
 		Log.d(TAG, "Updating shots taken view for " + player);
 
