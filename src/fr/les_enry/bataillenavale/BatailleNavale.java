@@ -234,7 +234,6 @@ public class BatailleNavale extends Activity {
 		});
 
 		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
-		// TODO To be handled by GameState
 		viewOwnCheckBox.setClickable(false);
 		viewOwnCheckBox
 				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
