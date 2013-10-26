@@ -3,9 +3,7 @@ package fr.les_enry.bataillenavale;
 import java.util.ArrayList;
 import java.util.List;
 
-//import android.content.Context;
 import android.util.Log;
-//import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -51,19 +49,11 @@ public class GameState {
 
 	private static final State INIT = fsm.state("Initial");
 	private static final State BOAT_TO_PLACE = fsm.state("Boat to place");
-//	private static final State CHECK_BOAT_TO_PLACE = fsm
-//			.state("Check boat to place");
 	private static final State SHOT_NEEDED = fsm.state("Shot needed");
-//	private static final State CHECK_WON = fsm.state("Check won");
 	private static final State GAME_OVER = fsm.state("Game over");
 
 	static final Event START = fsm.event("Start");
 	static final Event CELL_ACTIVATED = fsm.event("Cell activated");
-//	private static final Event MORE_BOATS = fsm.event("More boats to place");
-//	private static final Event NO_MORE_BOATS = fsm
-//			.event("No more boats to place");
-//	private static final Event NOT_WON = fsm.event("Game not won");
-//	private static final Event WON = fsm.event("Game won");
 	private static final Event RESET = fsm.event("Reset game");
 
 	/** Global game state. */
