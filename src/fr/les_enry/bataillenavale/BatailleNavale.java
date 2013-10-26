@@ -156,8 +156,9 @@ public class BatailleNavale extends Activity {
 				int col = (int) Math.floor(x / colStep);
 				Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row + ","
 						+ col + " steps: " + rowStep + "," + colStep);
-				Cell cell = GameState.getGameState().getCell(row, col);
-				cell.handleTouchEvent(this);
+				
+				gameState.processEvent(GameState.CELL_ACTIVATED, row, col);
+
 				this.invalidate();
 			}
 

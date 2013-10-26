@@ -3,9 +3,13 @@ package fr.les_enry.bataillenavale;
 import java.util.ArrayList;
 import java.util.List;
 
+//import android.content.Context;
 import android.util.Log;
+//import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import fr.les_enry.bataillenavale.Cell.CellState;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 import fr.les_enry.util.fsm.Event;
@@ -47,19 +51,19 @@ public class GameState {
 
 	private static final State INIT = fsm.state("Initial");
 	private static final State BOAT_TO_PLACE = fsm.state("Boat to place");
-	private static final State CHECK_BOAT_TO_PLACE = fsm
-			.state("Check boat to place");
+//	private static final State CHECK_BOAT_TO_PLACE = fsm
+//			.state("Check boat to place");
 	private static final State SHOT_NEEDED = fsm.state("Shot needed");
-	private static final State CHECK_WON = fsm.state("Check won");
+//	private static final State CHECK_WON = fsm.state("Check won");
 	private static final State GAME_OVER = fsm.state("Game over");
 
 	static final Event START = fsm.event("Start");
-	private static final Event BOAT_PLACED = fsm.event("Boat placed");
-	private static final Event MORE_BOATS = fsm.event("More boats to place");
-	private static final Event NO_MORE_BOATS = fsm.event("No more boats to place");
-	private static final Event SHOT_TAKEN = fsm.event("Shot taken");
-	private static final Event NOT_WON = fsm.event("Game not won");
-	private static final Event WON = fsm.event("Game won");
+	static final Event CELL_ACTIVATED = fsm.event("Cell activated");
+//	private static final Event MORE_BOATS = fsm.event("More boats to place");
+//	private static final Event NO_MORE_BOATS = fsm
+//			.event("No more boats to place");
+//	private static final Event NOT_WON = fsm.event("Game not won");
+//	private static final Event WON = fsm.event("Game won");
 	private static final Event RESET = fsm.event("Reset game");
 
 	/** Global game state. */
@@ -103,22 +107,33 @@ public class GameState {
 						return true;
 					}
 				});
-		fsm.rule().initial(BOAT_TO_PLACE).event(BOAT_PLACED)
-				.ok(CHECK_BOAT_TO_PLACE);
-		fsm.rule().initial(CHECK_BOAT_TO_PLACE).event(MORE_BOATS)
-				.ok(BOAT_TO_PLACE);
-		fsm.rule().initial(CHECK_BOAT_TO_PLACE).event(NO_MORE_BOATS)
-				.ok(SHOT_NEEDED);
-		fsm.rule().initial(SHOT_NEEDED).event(SHOT_TAKEN).ok(CHECK_WON);
-		fsm.rule().initial(CHECK_WON).event(NOT_WON).ok(SHOT_NEEDED);
-		fsm.rule().initial(CHECK_WON).event(WON).ok(GAME_OVER);
+		fsm.rule().initial(BOAT_TO_PLACE).event(CELL_ACTIVATED)
+				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED)
+				.action(new Action() {
+					public boolean act(Object... rowColumn) {
+						return handleCellActivationForBoatPlacement(rowColumn);
+					}
+				});
+		fsm.rule().initial(SHOT_NEEDED).event(CELL_ACTIVATED).ok(SHOT_NEEDED)
+				.fail(GAME_OVER).action(new Action() {
+					public boolean act(Object... rowColumn) {
+						return handleCellActivationForShot(rowColumn);
+					}
+				});
 		fsm.rule().initial(GAME_OVER).event(RESET).ok(BOAT_TO_PLACE);
 
+		// Ignore cell activation if game is over
+		fsm.rule().initial(GAME_OVER).event(CELL_ACTIVATED).ok(GAME_OVER);
+		
 		fsm.start(INIT);
 	}
 
+	void processEvent(Event event, Object... args) {
+		fsm.event(event, args);
+	}
+
 	void processEvent(Event event) {
-		fsm.event(event);
+		processEvent(event, (Object) null);
 	}
 
 	void processSoftEvent(Event event) {
@@ -375,4 +390,131 @@ public class GameState {
 	boolean isPlayerViewShootable() {
 		return isPlayerViewShootable;
 	}
+
+	/**
+	 * Places part of a boat on the cell that was activated.
+	 * 
+	 * @param rowColumn
+	 *            cell row, cell column
+	 * @return true if placement OK, false o/w.
+	 */
+	boolean handleCellActivationForBoatPlacement(Object... rowColumn) {
+		int row = (Integer) rowColumn[0];
+		int column = (Integer) rowColumn[1];
+
+		Cell cell = getCell(row, column);
+
+		Player player = getNextToPlace();
+
+		boolean moreBoatsToPlace = true;
+		if (player != null) {
+			try {
+				player.addShipToCell(cell);
+				cell.setState(CellState.SHIP);
+
+				// More boats to place?
+				Player player2 = testNextToPlace();
+				if (player2 != null && player2 == player) {
+					// More boats for same player
+					player2 = getNextToPlace();
+					batailleNavale.setActionText(player2.getName() + " place "
+							+ player2.getShipToPlace());
+				} else if (player2 != null && player2 != player) {
+					// No more boats for current player
+					displayToast("Press OK when ready.");
+					batailleNavale.setActionText(player.getName()
+							+ " ships placed.  Press OK.");
+				} else {
+					// No more boats to place
+					displayToast("Press OK when ready.");
+					batailleNavale.setActionText(player.getName()
+							+ " ships placed.  Press OK.");
+
+					moreBoatsToPlace = false;
+				}
+				
+			} catch (BadPlacementException e) {
+				displayToast("Can't place the ship there.");
+			}
+		} else
+			throw new RuntimeException(
+					"Placing boats, but no player has any left to place.");
+
+		return moreBoatsToPlace;
+	}
+
+	/**
+	 * Takes shot on cell activation.
+	 * 
+	 * @param rowColumn
+	 *            cell row, cell column
+	 * @return true if shot OK, false o/w.
+	 */
+	boolean handleCellActivationForShot(Object... rowColumn) {
+		int row = (Integer) rowColumn[0];
+		int column = (Integer) rowColumn[1];
+
+		Cell cell = getCell(row, column);
+
+		Shot shot = new Shot(row, column);
+
+		Player current = getCurrentPlayer();
+		Player opponent = getOpponent();
+
+		boolean moreShotsNeeded = true;
+		try {
+			Ship shipHit = fireShot(shot);
+			Log.d(TAG, (shipHit == null ? "Shot was a miss" : "Shot hit ship "
+					+ shipHit));
+
+			if (shipHit != null) {
+				if (shipHit.checkSunk()) {
+					cell.setState(CellState.SUNK);
+					updateCellsWithPlayerShots(getCurrentPlayer());
+					displayToast(shipHit + " sunk!");
+				} else {
+					cell.setState(CellState.HIT);
+					displayToast(shipHit + " hit!");
+				}
+			} else {
+				cell.setState(CellState.MISS);
+				displayToast("Missed!");
+			}
+
+			if (opponent.checkLost()) {
+				Log.d(TAG, opponent + " has lost");
+
+				displayToast(current.getName() + " has won!");
+				batailleNavale.setActionText(current.getName()
+						+ " won.  Game over.");
+				
+				moreShotsNeeded = false;
+			} else {
+				batailleNavale.setActionText(current.getName()
+						+ " turn complete ");
+			}
+		} catch (AlreadyPlayedShotException e) {
+			displayToast("Shot already played.");
+		} catch (AlreadyPlayedException e) {
+			displayToast("Already played, it's " + gameState.getOpponent()
+					+ "'s turn.");
+		} catch (CantShootHereException e) {
+			displayToast("You can't shoot yourself!");
+		}
+
+		return moreShotsNeeded;
+	}
+
+	/**
+	 * Display a toast.
+	 * @param text
+	 *            Text to display.
+	 */
+	private void displayToast(CharSequence text) {
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(batailleNavale, text, duration);
+		toast.show();
+	}
+
 }
