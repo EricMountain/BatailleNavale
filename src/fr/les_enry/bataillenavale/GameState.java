@@ -54,7 +54,7 @@ public class GameState {
 
 	static final Event START = fsm.event("Start");
 	static final Event CELL_ACTIVATED = fsm.event("Cell activated");
-	private static final Event RESET = fsm.event("Reset game");
+	static final Event RESET = fsm.event("Reset game");
 
 	/** Global game state. */
 	private static final GameState gameState = new GameState();
@@ -98,8 +98,7 @@ public class GameState {
 					}
 				});
 		fsm.rule().initial(BOAT_TO_PLACE).event(CELL_ACTIVATED)
-				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED)
-				.action(new Action() {
+				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED).action(new Action() {
 					public boolean act(Object... rowColumn) {
 						return handleCellActivationForBoatPlacement(rowColumn);
 					}
@@ -110,11 +109,29 @@ public class GameState {
 						return handleCellActivationForShot(rowColumn);
 					}
 				});
-		fsm.rule().initial(GAME_OVER).event(RESET).ok(BOAT_TO_PLACE);
+
+		fsm.rule().initial(GAME_OVER).event(RESET).ok(INIT)
+				.action(new Action() {
+					public boolean act() {
+						return resetGame();
+					}
+				});
+		fsm.rule().initial(BOAT_TO_PLACE).event(RESET).ok(INIT)
+				.action(new Action() {
+					public boolean act() {
+						return resetGame();
+					}
+				});
+		fsm.rule().initial(SHOT_NEEDED).event(RESET).ok(INIT)
+				.action(new Action() {
+					public boolean act() {
+						return resetGame();
+					}
+				});
 
 		// Ignore cell activation if game is over
 		fsm.rule().initial(GAME_OVER).event(CELL_ACTIVATED).ok(GAME_OVER);
-		
+
 		fsm.start(INIT);
 	}
 
@@ -137,11 +154,13 @@ public class GameState {
 	/**
 	 * Starts a new game.
 	 */
-	void resetGame() {
+	boolean resetGame() {
 		for (Player player : players) {
 			player.resetPlayer();
 		}
 		currentPlayer = 1;
+
+		return true;
 	}
 
 	/**
@@ -259,7 +278,8 @@ public class GameState {
 	/**
 	 * Updates the board cells as requested.
 	 * 
-	 * @param isOwnBoatsView If true, show own boats, o/w show sthots taken.
+	 * @param isOwnBoatsView
+	 *            If true, show own boats, o/w show sthots taken.
 	 */
 	void updateCells(boolean isOwnBoatsView) {
 		if (isOwnBoatsView)
@@ -267,7 +287,7 @@ public class GameState {
 		else
 			updateCellsWithPlayerShots(getCurrentPlayer());
 	}
-	
+
 	/**
 	 * Draws a player's own boats view.
 	 * 
@@ -434,7 +454,7 @@ public class GameState {
 
 					moreBoatsToPlace = false;
 				}
-				
+
 			} catch (BadPlacementException e) {
 				displayToast("Can't place the ship there.");
 			}
@@ -489,7 +509,7 @@ public class GameState {
 				displayToast(current.getName() + " has won!");
 				batailleNavale.setActionText(current.getName()
 						+ " won.  Game over.");
-				
+
 				moreShotsNeeded = false;
 			} else {
 				batailleNavale.setActionText(current.getName()
@@ -509,6 +529,7 @@ public class GameState {
 
 	/**
 	 * Display a toast.
+	 * 
 	 * @param text
 	 *            Text to display.
 	 */

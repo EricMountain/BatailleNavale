@@ -264,9 +264,8 @@ public class BatailleNavale extends Activity {
 			if (gameState.getOpponent().checkLost()) {
 				// Game is finished, create a new one and start ship placement
 				// sequence
-				// TODO refactor - c.f RESET_DIALOG
-				gameState.resetGame();
-				handleActionButtonClick(view);
+				gameState.processEvent(GameState.RESET);
+				gameState.processEvent(GameState.START);
 			} else {
 				// This starts and plays the game
 				viewOwnCheckBox.setClickable(true);
@@ -307,10 +306,10 @@ public class BatailleNavale extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
-									gameState.resetGame();
+									gameState.processEvent(GameState.RESET);
+									gameState.processEvent(GameState.START);
 									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
 											.setClickable(false);
-									handleActionButtonClick(null);
 								}
 							})
 					.setNegativeButton(android.R.string.no,
