@@ -10,17 +10,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
-//import android.util.Log;
-//import android.view.View;
-//import android.widget.Toast;
 
 /**
  * Simple cell.
  */
 class Cell {
-//	/** Tag for logging. */
-//	private static final String TAG = "Cell";
-
 	/** Maps a state to the colour used to represent it. */
 	private static final Map<CellState, Integer> state2Colour;
 
