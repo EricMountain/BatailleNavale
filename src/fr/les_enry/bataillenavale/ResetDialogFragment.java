@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 
 /**
  * Asks if the user wants to reset the game.
- *
  */
 public class ResetDialogFragment extends DialogFragment {
 	public interface ResetDialogListener {
@@ -25,15 +24,13 @@ public class ResetDialogFragment extends DialogFragment {
 		try {
 			resetDialogListener = (ResetDialogListener) activity;
 		} catch (ClassCastException e) {
-			// The activity doesn't implement the interface, throw exception
 			throw new ClassCastException(activity.toString()
-					+ " must implement NoticeDialogListener");
+					+ " needs to implement ResetDialogFragment.ResetDialogListener");
 		}
 	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(R.string.dialog_reset_game)
 				.setPositiveButton(android.R.string.yes,
