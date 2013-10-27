@@ -1,9 +1,6 @@
 package fr.les_enry.bataillenavale;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -171,11 +168,6 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 	 */
 	private static final String TAG = "BatailleNavale";
 
-//	/**
-//	 * Reset dialog. TODO: switch to new way of doing this.
-//	 */
-//	private static final int RESET_DIALOG = 1;
-
 	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
 
@@ -291,38 +283,9 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 		return true;
 	}
 
-//	@Override
-//	protected Dialog onCreateDialog(int id) {
-//
-//		switch (id) {
-//		case RESET_DIALOG:
-//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			builder.setMessage(R.string.dialog_reset_game)
-//					.setPositiveButton(android.R.string.yes,
-//							new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog,
-//										int id) {
-//									gameState.processEvent(GameState.RESET);
-//									gameState.processEvent(GameState.START);
-//									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
-//											.setClickable(false);
-//								}
-//							})
-//					.setNegativeButton(android.R.string.no,
-//							new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog,
-//										int id) {
-//									// Do nowt
-//								}
-//							});
-//
-//			return builder.create();
-//
-//		default:
-//			return super.onCreateDialog(id);
-//		}
-//	}
-
+	/**
+	 * Implements the ResetDialogListener interface.  Takes reset actions.
+	 */
 	public void onPositiveButton() {
 		gameState.processEvent(GameState.RESET);
 		gameState.processEvent(GameState.START);
