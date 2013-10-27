@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import fr.les_enry.bataillenavale.Cell.CellState;
 import fr.les_enry.util.fsm.FSM;
@@ -374,16 +373,11 @@ class GameState {
 	}
 
 	/**
-	 * Display a toast.
+	 * Displays a fleeting message.
 	 * 
-	 * @param text
-	 *            Text to display.
+	 * @param message
 	 */
-	private void displayToast(CharSequence text) {
-		int duration = Toast.LENGTH_SHORT;
-
-		Toast toast = Toast.makeText(batailleNavale, text, duration);
-		toast.show();
+	private void displayToast(String message) {
+		batailleNavale.displayToast(message);
 	}
-
 }

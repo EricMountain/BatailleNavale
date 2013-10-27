@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //TODO Must not handle touch event after player 1 has placed all ships
 //TODO Full i18n
@@ -318,4 +319,19 @@ public class BatailleNavale extends Activity {
 			return super.onCreateDialog(id);
 		}
 	}
+	
+
+	/**
+	 * Display a toast.
+	 * 
+	 * @param text
+	 *            Text to display.
+	 */
+	void displayToast(CharSequence text) {
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(this, text, duration);
+		toast.show();
+	}
+
 }
