@@ -25,11 +25,10 @@ import android.widget.Toast;
 
 //TODO Must not handle touch event after player 1 has placed all ships
 //TODO Full i18n
-//TODO Fix the way the dialog is created to be in line with modern way
 //TODO "New game"/Reset should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
 //TODO Refactor all logic including driving of the HCI into GameState
-//TODO Timeout if no activity and let the screen turn off + save state and be able to restore it
+//TODO Timeout if no activity and let the screen turn off + save state and be able to restore it => remove need for screen lock permission
 
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Automated tests
@@ -172,13 +171,17 @@ public class BatailleNavale extends Activity {
 	 */
 	private static final String TAG = "BatailleNavale";
 
+	/** Reset dialog.  
+	 * TODO: switch to new way of doing this.
+	 */
+	private static final int RESET_DIALOG = 1;
+
+
 	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
 
 	/** Square frame layout. */
 	private FrameLayout squareLayout = null;
-
-	private static final int RESET_DIALOG = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
