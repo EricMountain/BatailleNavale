@@ -7,6 +7,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+/**
+ * Asks if the user wants to reset the game.
+ *
+ */
 public class ResetDialogFragment extends DialogFragment {
 	public interface ResetDialogListener {
 		public void onPositiveButton();
