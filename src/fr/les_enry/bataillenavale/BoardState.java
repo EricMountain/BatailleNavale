@@ -7,6 +7,10 @@ import android.util.Log;
 
 import fr.les_enry.bataillenavale.Cell.CellState;
 
+/**
+ * Represents the visible board state.
+ * 
+ */
 class BoardState {
 	/** Tag for logs. **/
 	private static final String TAG = "BoardState";
@@ -42,13 +46,6 @@ class BoardState {
 	}
 
 	/**
-	 * Clears the board of all existing cells.
-	 */
-	void clearBoard() {
-		board.clear();
-	}
-
-	/**
 	 * Gets the list of cells.
 	 * 
 	 * @return a reference to the board.
@@ -64,7 +61,7 @@ class BoardState {
 	 * @param column
 	 * @return a cell
 	 */
-	Cell getCell(int row, int column) {
+	private Cell getCell(int row, int column) {
 		return board.get(row * columns + column);
 	}
 	
