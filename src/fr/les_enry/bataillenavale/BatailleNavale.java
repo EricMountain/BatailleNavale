@@ -190,7 +190,6 @@ public class BatailleNavale extends Activity {
 		setContentView(R.layout.activity_bataille_navale);
 
 		gameState.setBatailleNavale(this);
-//		gameState.getBoardState().clearBoard();
 
 		FrameLayout frameLayout = (FrameLayout) this
 				.findViewById(R.id.FrameLayout);
@@ -210,13 +209,6 @@ public class BatailleNavale extends Activity {
 														// invalidate() do the
 														// job?
 		// squareLayout.invalidate();
-
-//		for (int row = 0; row < GameState.NB_ROWS; row++) {
-//			for (int column = 0; column < GameState.NB_COLS; column++) {
-//				Cell cell = new Cell(row, column);
-//				gameState.addCell(cell);
-//			}
-//		}
 
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setOnClickListener(new View.OnClickListener() {
