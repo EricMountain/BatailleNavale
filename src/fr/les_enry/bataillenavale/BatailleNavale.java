@@ -266,7 +266,6 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 	}
 
 	void handleResetButtonClick(View view) {
-		// showDialog(RESET_DIALOG);
 		new ResetDialogFragment().show(this.getSupportFragmentManager(), null);
 	}
 
