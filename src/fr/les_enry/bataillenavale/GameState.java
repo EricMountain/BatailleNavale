@@ -16,7 +16,7 @@ import fr.les_enry.util.fsm.Action;
 /**
  * Represents current game state.
  */
-public class GameState {
+class GameState {
 	/** Tag for logs. **/
 	private static final String TAG = "GameState";
 
