@@ -133,7 +133,7 @@ public class BatailleNavale extends Activity {
 				canvas.drawLine(x, 0, x, bottom, boardPaint);
 			}
 
-			for (Cell c : GameState.getGameState().getBoard()) {
+			for (Cell c : gameState.getBoardState().getBoard()) {
 				c.draw(canvas, c.getColumn() * colStep, c.getRow() * rowStep,
 						(c.getColumn() + 1) * colStep, (c.getRow() + 1)
 								* rowStep);
@@ -190,7 +190,7 @@ public class BatailleNavale extends Activity {
 		setContentView(R.layout.activity_bataille_navale);
 
 		gameState.setBatailleNavale(this);
-		gameState.clearBoard();
+//		gameState.getBoardState().clearBoard();
 
 		FrameLayout frameLayout = (FrameLayout) this
 				.findViewById(R.id.FrameLayout);
@@ -211,12 +211,12 @@ public class BatailleNavale extends Activity {
 														// job?
 		// squareLayout.invalidate();
 
-		for (int row = 0; row < GameState.NB_ROWS; row++) {
-			for (int column = 0; column < GameState.NB_COLS; column++) {
-				Cell cell = new Cell(row, column);
-				gameState.addCell(cell);
-			}
-		}
+//		for (int row = 0; row < GameState.NB_ROWS; row++) {
+//			for (int column = 0; column < GameState.NB_COLS; column++) {
+//				Cell cell = new Cell(row, column);
+//				gameState.addCell(cell);
+//			}
+//		}
 
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +240,7 @@ public class BatailleNavale extends Activity {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						gameState.updateCells(isChecked);
+						gameState.getBoardState().updateCells(isChecked);
 						squareLayout.invalidate();
 					}
 				});
