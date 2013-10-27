@@ -196,14 +196,12 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 
 		frameLayout.addView(squareLayout, squareLayoutParams);
 
-		// frameLayout.setBackgroundColor(Color.WHITE);
-		//
-		// squareLayout.setBackgroundColor(Color.YELLOW);
 		squareLayout.setBackgroundColor(Color.BLACK); // TODO Why is this nec.?
 														// Why doesn't
 														// invalidate() do the
 														// job?
-		// squareLayout.invalidate();
+		//squareLayout.invalidate();
+		
 
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setOnClickListener(new View.OnClickListener() {
