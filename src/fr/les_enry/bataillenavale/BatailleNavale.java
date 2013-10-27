@@ -1,6 +1,5 @@
 package fr.les_enry.bataillenavale;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -47,14 +47,14 @@ import android.widget.Toast;
  * Entry point activity.
  * 
  */
-public class BatailleNavale extends Activity {
+public class BatailleNavale extends FragmentActivity implements ResetDialogFragment.ResetDialogListener {
 	/**
 	 * Implements a square layout.
 	 */
 	private final class SquareLayout extends FrameLayout {
 		/** Number of pixels between rows. */
 		private int rowStep = 0;
-		
+
 		/** Number of pixels between columns. */
 		private int colStep = 0;
 
@@ -66,7 +66,7 @@ public class BatailleNavale extends Activity {
 		 */
 		private Rect viewPort = new Rect();
 
-		/** 
+		/**
 		 * Constuctor.
 		 * 
 		 * @param context
@@ -156,7 +156,7 @@ public class BatailleNavale extends Activity {
 				int col = (int) Math.floor(x / colStep);
 				Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row + ","
 						+ col + " steps: " + rowStep + "," + colStep);
-				
+
 				gameState.processEvent(GameState.CELL_ACTIVATED, row, col);
 
 				this.invalidate();
@@ -171,11 +171,10 @@ public class BatailleNavale extends Activity {
 	 */
 	private static final String TAG = "BatailleNavale";
 
-	/** Reset dialog.  
-	 * TODO: switch to new way of doing this.
-	 */
-	private static final int RESET_DIALOG = 1;
-
+//	/**
+//	 * Reset dialog. TODO: switch to new way of doing this.
+//	 */
+//	private static final int RESET_DIALOG = 1;
 
 	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
@@ -270,17 +269,18 @@ public class BatailleNavale extends Activity {
 				actionTextView.setText(nextPlayer.getName() + " doit tirer");
 			}
 		}
-		
+
 		squareLayout.invalidate();
 	}
 
 	void handleResetButtonClick(View view) {
-		showDialog(RESET_DIALOG);
+		// showDialog(RESET_DIALOG);
+		new ResetDialogFragment().show(this.getSupportFragmentManager(), null);
 	}
-	
+
 	void setActionText(String text) {
 		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
-		
+
 		actionTextView.setText(text);
 	}
 
@@ -291,38 +291,44 @@ public class BatailleNavale extends Activity {
 		return true;
 	}
 
-	@Override
-	protected Dialog onCreateDialog(int id) {
+//	@Override
+//	protected Dialog onCreateDialog(int id) {
+//
+//		switch (id) {
+//		case RESET_DIALOG:
+//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//			builder.setMessage(R.string.dialog_reset_game)
+//					.setPositiveButton(android.R.string.yes,
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									gameState.processEvent(GameState.RESET);
+//									gameState.processEvent(GameState.START);
+//									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
+//											.setClickable(false);
+//								}
+//							})
+//					.setNegativeButton(android.R.string.no,
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog,
+//										int id) {
+//									// Do nowt
+//								}
+//							});
+//
+//			return builder.create();
+//
+//		default:
+//			return super.onCreateDialog(id);
+//		}
+//	}
 
-		switch (id) {
-		case RESET_DIALOG:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.dialog_reset_game)
-					.setPositiveButton(android.R.string.yes,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									gameState.processEvent(GameState.RESET);
-									gameState.processEvent(GameState.START);
-									((CheckBox) findViewById(R.id.ViewOwnCheckBox))
-											.setClickable(false);
-								}
-							})
-					.setNegativeButton(android.R.string.no,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// Do nowt
-								}
-							});
-
-			return builder.create();
-
-		default:
-			return super.onCreateDialog(id);
-		}
+	public void onPositiveButton() {
+		gameState.processEvent(GameState.RESET);
+		gameState.processEvent(GameState.START);
+		((CheckBox) findViewById(R.id.ViewOwnCheckBox)).setClickable(false);
 	}
-	
+
 
 	/**
 	 * Display a toast.
