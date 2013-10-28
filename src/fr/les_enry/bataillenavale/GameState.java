@@ -45,7 +45,7 @@ class GameState {
 
 	/** Board representation of the game. */
 	private BoardState boardState = new BoardState(this);
-	
+
 	/** List of players in the game. */
 	private List<Player> players = new ArrayList<Player>();
 
@@ -86,13 +86,7 @@ class GameState {
 	 * Sets up the FSM. Initial state is BOAT_TO_PLACE.
 	 */
 	private void initFSM() {
-		fsm.rule().initial(INIT).event(START).ok(BOAT_TO_PLACE)
-				.action(new Action() {
-					public boolean act() {
-						batailleNavale.handleActionButtonClick(null);
-						return true;
-					}
-				});
+		fsm.rule().initial(INIT).event(START).ok(BOAT_TO_PLACE);
 		fsm.rule().initial(BOAT_TO_PLACE).event(CELL_ACTIVATED)
 				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED).action(new Action() {
 					public boolean act(Object... rowColumn) {
@@ -140,11 +134,7 @@ class GameState {
 	}
 
 	void processSoftEvent(Event event) {
-		try {
-			processEvent(event);
-		} catch (FSM.NoApplicableRuleException nowt) {
-			// Do nothing
-		}
+		fsm.softEvent(event);
 	}
 
 	/**
@@ -205,7 +195,7 @@ class GameState {
 	 * 
 	 * @return next player to place a ship, or null if none.
 	 */
-	Player getNextToPlace() {
+	Player getPlayerToPlaceBoat() {
 		Player player = testNextToPlace();
 
 		if (player != null)
@@ -274,7 +264,7 @@ class GameState {
 		int row = (Integer) rowColumn[0];
 		int column = (Integer) rowColumn[1];
 
-		Player player = getNextToPlace();
+		Player player = getPlayerToPlaceBoat();
 
 		boolean moreBoatsToPlace = true;
 		if (player != null) {
@@ -290,14 +280,12 @@ class GameState {
 							+ player.getShipToPlace());
 				} else if (player2 != null && player2 != player) {
 					// No more boats for current player
-					displayToast("Press OK when ready.");
-					batailleNavale.setActionText(player.getName()
-							+ " ships placed.  Press OK.");
+					batailleNavale
+							.processEvent(BatailleNavale.ALL_BOATS_PLACED);
 				} else {
 					// No more boats to place
-					displayToast("Press OK when ready.");
-					batailleNavale.setActionText(player.getName()
-							+ " ships placed.  Press OK.");
+					batailleNavale
+							.processEvent(BatailleNavale.ALL_BOATS_PLACED);
 
 					moreBoatsToPlace = false;
 				}
@@ -348,17 +336,15 @@ class GameState {
 				displayToast("Missed!");
 			}
 
-			if (opponent.checkLost()) {
-				Log.d(TAG, opponent + " has lost");
 
-				displayToast(current.getName() + " has won!");
-				batailleNavale.setActionText(current.getName()
-						+ " won.  Game over.");
+			if (opponent.checkLost()) {
+				batailleNavale.processEvent(BatailleNavale.WON, current.getName()
+						+ " won!  Game over!");
 
 				moreShotsNeeded = false;
 			} else {
-				batailleNavale.setActionText(current.getName()
-						+ " turn complete ");
+				batailleNavale.processEvent(BatailleNavale.SHOT_FIRED,
+						current.getName() + " turn complete ");
 			}
 		} catch (AlreadyPlayedShotException e) {
 			displayToast("Shot already played.");

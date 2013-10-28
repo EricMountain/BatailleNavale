@@ -1,5 +1,9 @@
 package fr.les_enry.bataillenavale;
 
+import fr.les_enry.util.fsm.Action;
+import fr.les_enry.util.fsm.Event;
+import fr.les_enry.util.fsm.FSM;
+import fr.les_enry.util.fsm.State;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,11 +24,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO Must not handle touch event after player 1 has placed all ships
 //TODO Full i18n
 //TODO "New game"/Reset should move to menu
 //TODO Exit activity, save state when leaving activity, and restore
-//TODO Refactor all logic including driving of the HCI into GameState
 //TODO Timeout if no activity and let the screen turn off + save state and be able to restore it => remove need for screen lock permission
 
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
@@ -44,7 +46,8 @@ import android.widget.Toast;
  * Entry point activity.
  * 
  */
-public class BatailleNavale extends FragmentActivity implements ResetDialogFragment.ResetDialogListener {
+public class BatailleNavale extends FragmentActivity implements
+		ResetDialogFragment.ResetDialogListener {
 	/**
 	 * Implements a square layout.
 	 */
@@ -147,6 +150,10 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 
 			if (action == MotionEvent.ACTION_UP
 					|| action == MotionEvent.ACTION_POINTER_UP) {
+
+				if (!this.isClickable())
+					return true;
+
 				float x = event.getX();
 				float y = event.getY();
 				int row = (int) Math.floor(y / rowStep);
@@ -168,11 +175,186 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 	 */
 	private static final String TAG = "BatailleNavale";
 
+	private static final FSM fsm = new FSM();
+	private static final State INIT = fsm.state("Initial");
+	private static final State P1_PLACE_BOAT = fsm
+			.state("Player 1 placing boat");
+	private static final State P2_PLACE_BOAT = fsm
+			.state("Player 2 placing boat");
+	private static final State P1_BOATS_PLACED = fsm
+			.state("Player 1 boats placed");
+	private static final State P2_BOATS_PLACED = fsm
+			.state("Player 2 boats placed");
+	private static final State P1_TAKE_SHOT = fsm.state("Player 1 taking shot");
+	private static final State P2_TAKE_SHOT = fsm.state("Player 2 taking shot");
+	private static final State P1_SHOT_TAKEN = fsm.state("Player 1 shot taken");
+	private static final State P2_SHOT_TAKEN = fsm.state("Player 2 shot taken");
+	private static final State P1_OWN_BOATS = fsm.state("Player 1 own boats");
+	private static final State P2_OWN_BOATS = fsm.state("Player 2 own boats");
+	private static final State P1_OWN_BOATS_ST = fsm
+			.state("Player 1 own boats (shot taken)");
+	private static final State P2_OWN_BOATS_ST = fsm
+			.state("Player 2 own boats (shot taken)");
+	private static final State GAME_OVER = fsm.state("Game over");
+
+	static final Event START = fsm.event("Start");
+	static final Event ALL_BOATS_PLACED = fsm.event("All boats placed");
+	static final Event P2_START_PLACING = fsm
+			.event("P2 to start placing boats");
+	static final Event P1_TO_FIRE = fsm.event("P1 to take shot");
+	static final Event P2_TO_FIRE = fsm.event("P2 to take shot");
+	static final Event SHOT_FIRED = fsm.event("Shot fired");
+	static final Event WON = fsm.event("Player won!");
+	static final Event SEE_OWN_BOATS_TOGGLE = fsm
+			.event("Toggle own boats view");
+	static final Event RESET = fsm.event("Reset game");
+
 	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
 
 	/** Square frame layout. */
 	private FrameLayout squareLayout = null;
+
+	private class ResetAction extends Action {
+		public boolean act() {
+			gameState.processEvent(GameState.RESET);
+			return true;
+		}
+	}
+
+	private class ToggleViewOwnBoatsAction extends Action {
+		public boolean act(Object... isChecked) {
+			gameState.getBoardState().updateCells((Boolean) isChecked[0]);
+			squareLayout.invalidate();
+
+			return true;
+		}
+	}
+
+	private final ResetAction resetAction = new ResetAction();
+	private final ToggleViewOwnBoatsAction toggleViewOwnBoatsAction = new ToggleViewOwnBoatsAction();
+
+	private void initFSM() {
+		fsm.reset();
+
+		fsm.rule().initial(INIT).event(START).ok(P1_PLACE_BOAT)
+				.action(new Action() {
+					public boolean act(Object... rowColumn) {
+						gameState.processSoftEvent(GameState.START);
+						viewOwnBoatsCheckBoxClear();
+						viewOwnBoatsCheckBoxSetClickable(false);
+						squareLayout.invalidate();
+						return updateUiForBoatPlacement();
+					}
+				});
+		fsm.rule().initial(P1_PLACE_BOAT).event(ALL_BOATS_PLACED)
+				.ok(P1_BOATS_PLACED).action(new Action() {
+					public boolean act() {
+						squareLayout.setClickable(false);
+						displayToast("Press OK when ready.");
+						setActionText("Ships placed.  Press OK.");
+						return true;
+					}
+				});
+		fsm.rule().initial(P1_BOATS_PLACED).event(P2_START_PLACING)
+				.ok(P2_PLACE_BOAT).action(new Action() {
+					public boolean act() {
+						return updateUiForBoatPlacement();
+					}
+				});
+		fsm.rule().initial(P2_PLACE_BOAT).event(ALL_BOATS_PLACED)
+				.ok(P2_BOATS_PLACED).action(new Action() {
+					public boolean act() {
+						displayToast("Press OK when ready.");
+						setActionText("Ships placed.  Press OK.");
+						return true;
+					}
+				});
+		fsm.rule().initial(P2_BOATS_PLACED).event(P1_TO_FIRE).ok(P1_TAKE_SHOT)
+				.action(new Action() {
+					public boolean act() {
+						return updateUiForPlayerShot();
+					}
+				});
+		fsm.rule().initial(P1_TAKE_SHOT).event(SHOT_FIRED).ok(P1_SHOT_TAKEN)
+				.action(new Action() {
+					public boolean act(Object... args) {
+						setActionText((String) args[0]);
+						return true;
+					}
+				});
+		fsm.rule().initial(P1_TAKE_SHOT).event(WON).ok(GAME_OVER)
+				.action(new Action() {
+					public boolean act(Object... args) {
+						setActionText((String) args[0]);
+						displayToast((String) args[0]);
+						return true;
+					}
+				});
+		fsm.rule().initial(P1_SHOT_TAKEN).event(P2_TO_FIRE).ok(P2_TAKE_SHOT)
+				.action(new Action() {
+					public boolean act() {
+						return updateUiForPlayerShot();
+					}
+				});
+
+		fsm.rule().initial(P2_TAKE_SHOT).event(SHOT_FIRED).ok(P2_SHOT_TAKEN)
+				.action(new Action() {
+					public boolean act(Object... args) {
+						setActionText((String) args[0]);
+						return true;
+					}
+				});
+		fsm.rule().initial(P2_TAKE_SHOT).event(WON).ok(GAME_OVER)
+				.action(new Action() {
+					public boolean act(Object... args) {
+						setActionText((String) args[0]);
+						displayToast((String) args[0]);
+						return true;
+					}
+				});
+		fsm.rule().initial(P2_SHOT_TAKEN).event(P1_TO_FIRE).ok(P1_TAKE_SHOT)
+				.action(new Action() {
+					public boolean act() {
+						return updateUiForPlayerShot();
+					}
+				});
+
+		fsm.rule().initial(P1_TAKE_SHOT).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P1_OWN_BOATS).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P2_TAKE_SHOT).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P2_OWN_BOATS).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P1_OWN_BOATS).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P1_TAKE_SHOT).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P2_OWN_BOATS).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P2_TAKE_SHOT).action(toggleViewOwnBoatsAction);
+
+		fsm.rule().initial(P1_SHOT_TAKEN).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P1_OWN_BOATS_ST).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P2_SHOT_TAKEN).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P2_OWN_BOATS_ST).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P1_OWN_BOATS_ST).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P1_SHOT_TAKEN).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(P2_OWN_BOATS_ST).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(P2_SHOT_TAKEN).action(toggleViewOwnBoatsAction);
+
+		fsm.rule().initial(INIT).event(RESET).ok(INIT);
+		fsm.rule().initial(P1_PLACE_BOAT).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_PLACE_BOAT).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P1_TAKE_SHOT).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_TAKE_SHOT).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P1_OWN_BOATS).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_OWN_BOATS).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(GAME_OVER).event(RESET).ok(INIT).action(resetAction);
+
+		fsm.start(INIT);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -185,23 +367,20 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 		setContentView(R.layout.activity_bataille_navale);
 
 		gameState.setBatailleNavale(this);
+		initFSM();
 
 		FrameLayout frameLayout = (FrameLayout) this
 				.findViewById(R.id.FrameLayout);
-
-		squareLayout = new SquareLayout(this);
-
 		FrameLayout.LayoutParams squareLayoutParams = new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-		frameLayout.addView(squareLayout, squareLayoutParams);
+		squareLayout = new SquareLayout(this);
 
-		squareLayout.setBackgroundColor(Color.BLACK); // TODO Why is this nec.?
-														// Why doesn't
-														// invalidate() do the
-														// job?
-		//squareLayout.invalidate();
-		
+		// TODO Why is this nec.? Why doesn't invalidate() do the job?
+		squareLayout.setBackgroundColor(Color.BLACK);
+		// squareLayout.invalidate();
+
+		frameLayout.addView(squareLayout, squareLayoutParams);
 
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setOnClickListener(new View.OnClickListener() {
@@ -218,49 +397,74 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 			}
 		});
 
+		viewOwnBoatsCheckBoxSetOnCheckedListener();
+
+		// Start ship placement sequence unless game is already in progress
+		fsm.softEvent(START);
+	}
+
+	/**
+	 * Handles OK button logic.
+	 * 
+	 * @param view
+	 */
+	void handleActionButtonClick(View view) {
+
+		if (fsm.getState() == P1_OWN_BOATS || fsm.getState() == P1_OWN_BOATS_ST
+				|| fsm.getState() == P2_OWN_BOATS
+				|| fsm.getState() == P2_OWN_BOATS_ST)
+			viewOwnBoatsCheckBoxClear();
+
+		if (fsm.getState() == P1_BOATS_PLACED) {
+			fsm.event(P2_START_PLACING);
+		} else if (fsm.getState() == P2_BOATS_PLACED
+				|| fsm.getState() == P2_SHOT_TAKEN) {
+			fsm.event(P1_TO_FIRE);
+		} else if (fsm.getState() == P1_SHOT_TAKEN) {
+			fsm.event(P2_TO_FIRE);
+		} else if (fsm.getState() == GAME_OVER) {
+			onResetRequest();
+		} else {
+			throw new RuntimeException("Why are we here? FSM state = "
+					+ fsm.getState());
+		}
+
+		squareLayout.invalidate();
+	}
+
+	/**
+	 * Clears the "view own boats" check box.
+	 * 
+	 * @return
+	 */
+	private void viewOwnBoatsCheckBoxClear() {
 		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
-		viewOwnCheckBox.setClickable(false);
+
+		viewOwnCheckBox.setChecked(false);
+	}
+
+	/**
+	 * Enables/disables the "view own boats" check box.
+	 * 
+	 * @return
+	 */
+	private void viewOwnBoatsCheckBoxSetClickable(boolean isClickable) {
+		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
+
+		viewOwnCheckBox.setClickable(isClickable);
+	}
+
+	private void viewOwnBoatsCheckBoxSetOnCheckedListener() {
+		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
+
 		viewOwnCheckBox
 				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						gameState.getBoardState().updateCells(isChecked);
-						squareLayout.invalidate();
+						fsm.event(SEE_OWN_BOATS_TOGGLE, isChecked);
 					}
 				});
-
-		// Start ship placement sequence unless game is already in progress
-		gameState.processSoftEvent(GameState.START);
-	}
-
-	// TODO Refactor
-	void handleActionButtonClick(View view) {
-		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
-		viewOwnCheckBox.setChecked(false);
-
-		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
-
-		Player player2 = gameState.getNextToPlace();
-		if (player2 != null) {
-			actionTextView.setText(player2.getName() + " place "
-					+ player2.getShipToPlace());
-		} else {
-			if (gameState.getOpponent().checkLost()) {
-				// Game is finished, create a new one and start ship placement
-				// sequence
-				gameState.processEvent(GameState.RESET);
-				gameState.processEvent(GameState.START);
-			} else {
-				// This starts and plays the game
-				viewOwnCheckBox.setClickable(true);
-
-				Player nextPlayer = gameState.nextPlayer();
-				actionTextView.setText(nextPlayer.getName() + " doit tirer");
-			}
-		}
-
-		squareLayout.invalidate();
 	}
 
 	void handleResetButtonClick(View view) {
@@ -281,14 +485,40 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 	}
 
 	/**
-	 * Implements the ResetDialogListener interface.  Takes reset actions.
+	 * Implements the ResetDialogListener interface. Takes reset actions.
 	 */
-	public void onPositiveButton() {
-		gameState.processEvent(GameState.RESET);
-		gameState.processEvent(GameState.START);
-		((CheckBox) findViewById(R.id.ViewOwnCheckBox)).setClickable(false);
+	public void onResetRequest() {
+		fsm.event(RESET);
+		fsm.event(START);
 	}
 
+	/**
+	 * Process an FSM event.
+	 * 
+	 * @param event
+	 * @param args
+	 */
+	void processEvent(Event event, Object... args) {
+		fsm.event(event, args);
+	}
+
+	/**
+	 * Process an FSM event.
+	 * 
+	 * @param event
+	 */
+	void processEvent(Event event) {
+		processEvent(event, (Object) null);
+	}
+
+	/**
+	 * Process an FSM event w/o throwing an exception if no rule matches.
+	 * 
+	 * @param event
+	 */
+	void processSoftEvent(Event event) {
+		fsm.softEvent(event);
+	}
 
 	/**
 	 * Display a toast.
@@ -301,6 +531,34 @@ public class BatailleNavale extends FragmentActivity implements ResetDialogFragm
 
 		Toast toast = Toast.makeText(this, text, duration);
 		toast.show();
+	}
+
+	/**
+	 * Sets the UI up for player to place boats.
+	 * 
+	 * @return true
+	 */
+	private boolean updateUiForBoatPlacement() {
+		Player player = gameState.getPlayerToPlaceBoat();
+
+		setActionText(player.getName() + " place " + player.getShipToPlace());
+
+		squareLayout.setClickable(true);
+
+		return true;
+	}
+
+	/**
+	 * Sets the UI up for player to take a shot.
+	 * 
+	 * @return true
+	 */
+	private boolean updateUiForPlayerShot() {
+		viewOwnBoatsCheckBoxSetClickable(true);
+
+		setActionText(gameState.nextPlayer().getName() + " doit tirer");
+
+		return true;
 	}
 
 }

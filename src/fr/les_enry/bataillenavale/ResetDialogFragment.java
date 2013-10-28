@@ -12,7 +12,7 @@ import android.support.v4.app.DialogFragment;
  */
 public class ResetDialogFragment extends DialogFragment {
 	public interface ResetDialogListener {
-		public void onPositiveButton();
+		public void onResetRequest();
 	}
 
 	ResetDialogListener resetDialogListener;
@@ -37,7 +37,7 @@ public class ResetDialogFragment extends DialogFragment {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int id) {
-								resetDialogListener.onPositiveButton();
+								resetDialogListener.onResetRequest();
 							}
 						})
 				.setNegativeButton(android.R.string.no,
