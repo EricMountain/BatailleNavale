@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -47,7 +49,7 @@ import android.widget.Toast;
  * 
  */
 public class BatailleNavale extends FragmentActivity implements
-		ResetDialogFragment.ResetDialogListener {
+		ResetDialogFragment.ResetDialogListener { //, Parcelable
 	/**
 	 * Implements a square layout.
 	 */
@@ -235,6 +237,9 @@ public class BatailleNavale extends FragmentActivity implements
 	private final ToggleViewOwnBoatsAction toggleViewOwnBoatsAction = new ToggleViewOwnBoatsAction();
 
 	private void initFSM() {
+		if (fsm.getState() != null)
+			return;
+
 		fsm.reset();
 
 		fsm.rule().initial(INIT).event(START).ok(P1_PLACE_BOAT)
@@ -360,6 +365,8 @@ public class BatailleNavale extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Log.d(TAG, "onCreate");
+
 		getWindow().addFlags(
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 						| WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -400,7 +407,65 @@ public class BatailleNavale extends FragmentActivity implements
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
 		// Start ship placement sequence unless game is already in progress
-		fsm.softEvent(START);
+		Log.d(TAG, "FSM state on create: " + fsm.getState());
+		if (fsm.isState(INIT))
+			fsm.softEvent(START);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		Log.d(TAG, "Back pressed.");
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.d(TAG, "onDestroy");
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(TAG, "onPause");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.d(TAG, "onResume");
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		Log.d(TAG, "onSaveInstanceState");
+	}
+
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		Log.d(TAG, "onRestart");
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.d(TAG, "onStart");
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Log.d(TAG, "onStop");
 	}
 
 	/**
@@ -410,19 +475,16 @@ public class BatailleNavale extends FragmentActivity implements
 	 */
 	void handleActionButtonClick(View view) {
 
-		if (fsm.getState() == P1_OWN_BOATS || fsm.getState() == P1_OWN_BOATS_ST
-				|| fsm.getState() == P2_OWN_BOATS
-				|| fsm.getState() == P2_OWN_BOATS_ST)
+		if (fsm.isStateIn(P1_OWN_BOATS, P1_OWN_BOATS_ST, P2_OWN_BOATS, P2_OWN_BOATS_ST))
 			viewOwnBoatsCheckBoxClear();
 
-		if (fsm.getState() == P1_BOATS_PLACED) {
+		if (fsm.isState(P1_BOATS_PLACED)) {
 			fsm.event(P2_START_PLACING);
-		} else if (fsm.getState() == P2_BOATS_PLACED
-				|| fsm.getState() == P2_SHOT_TAKEN) {
+		} else if (fsm.isStateIn(P2_BOATS_PLACED, P2_SHOT_TAKEN)) {
 			fsm.event(P1_TO_FIRE);
-		} else if (fsm.getState() == P1_SHOT_TAKEN) {
+		} else if (fsm.isState(P1_SHOT_TAKEN)) {
 			fsm.event(P2_TO_FIRE);
-		} else if (fsm.getState() == GAME_OVER) {
+		} else if (fsm.isState(GAME_OVER)) {
 			onResetRequest();
 		} else {
 			throw new RuntimeException("Why are we here? FSM state = "
@@ -541,7 +603,13 @@ public class BatailleNavale extends FragmentActivity implements
 	private boolean updateUiForBoatPlacement() {
 		Player player = gameState.getPlayerToPlaceBoat();
 
-		setActionText(player.getName() + " place " + player.getShipToPlace());
+		// Player may be null if all boats have been placed by both players, and
+		// the screen is rotated
+		if (player != null)
+			setActionText(player.getName() + " place "
+					+ player.getShipToPlace());
+		else
+			setActionText("Press OK to continue");
 
 		squareLayout.setClickable(true);
 
@@ -560,5 +628,18 @@ public class BatailleNavale extends FragmentActivity implements
 
 		return true;
 	}
+
+//	@Override
+//	public int describeContents() {
+//		return 0;
+//	}
+//
+//	@Override
+//	public void writeToParcel(Parcel dest, int flags) {
+//		// Write FSM state
+//
+//		// Write game state
+//
+//	}
 
 }
