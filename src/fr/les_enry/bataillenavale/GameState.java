@@ -72,6 +72,8 @@ class GameState {
 	 * Initialises game state with 2 players.
 	 */
 	GameState() {
+		Log.d(TAG, "Constructing new game state");
+		
 		players.add(new Player("Player 1"));
 		players.add(new Player("Player 2"));
 
@@ -86,6 +88,9 @@ class GameState {
 	 * Sets up the FSM. Initial state is BOAT_TO_PLACE.
 	 */
 	private void initFSM() {
+		
+		fsm.reset();
+		
 		fsm.rule().initial(INIT).event(START).ok(BOAT_TO_PLACE);
 		fsm.rule().initial(BOAT_TO_PLACE).event(CELL_ACTIVATED)
 				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED).action(new Action() {
