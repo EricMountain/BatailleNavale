@@ -1,17 +1,11 @@
 package fr.les_enry.bataillenavale;
 
-import fr.les_enry.util.fsm.Action;
-import fr.les_enry.util.fsm.Event;
-import fr.les_enry.util.fsm.FSM;
-import fr.les_enry.util.fsm.State;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,31 +19,43 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import fr.les_enry.util.fsm.Action;
+import fr.les_enry.util.fsm.Event;
+import fr.les_enry.util.fsm.FSM;
+import fr.les_enry.util.fsm.State;
+
+//TODO Enable Action Button only when appropriate
+
+//TODO Serialise game state and co so we no longer need it to be a singleton
+//TODO Timeout if no activity and let the screen turn off => remove need for screen lock permission
 
 //TODO Full i18n
 //TODO "New game"/Reset should move to menu
-//TODO Exit activity, save state when leaving activity, and restore
-//TODO Timeout if no activity and let the screen turn off + save state and be able to restore it => remove need for screen lock permission
 
-//TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Automated tests
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
 //TODO Game icon
+//TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Animations
 //TODO Setup (sound on/off, animations on/off)
 //TODO High scores
-//TODO Handle back button properly
 //TODO Sounds
-//TODO Setup theme colours properly, not using hardcodes on layout and TextView colours
 
 /**
  * Entry point activity.
  * 
  */
 public class BatailleNavale extends FragmentActivity implements
-		ResetDialogFragment.ResetDialogListener { //, Parcelable
+		ResetDialogFragment.ResetDialogListener {
+
+	private static final String ACTION_TEXT = "ActionText";
+	private static final String VIEW_OWN_CHECKED = "ViewOwnChecked";
+	private static final String GRID_CLICKABLE = "GridClickable";
+	private static final String ACTION_BUTTON_CLICKABLE = "ActionButtonClickable";
+	private static final String FSM_STATE = "FSMState";
+
 	/**
 	 * Implements a square layout.
 	 */
@@ -148,13 +154,17 @@ public class BatailleNavale extends FragmentActivity implements
 
 			// For the time being, only deal with "up" events
 			int action = event.getActionMasked();
-			// Log.d(TAG, "MotionEvent: " + event);
+			Log.d(TAG, "MotionEvent: " + event);
 
 			if (action == MotionEvent.ACTION_UP
 					|| action == MotionEvent.ACTION_POINTER_UP) {
 
-				if (!this.isClickable())
+				if (!this.isClickable()) {
+					Log.d(TAG, this + " is not clickable");
 					return true;
+				} else {
+					Log.d(TAG, this + " is clickable");
+				}
 
 				float x = event.getX();
 				float y = event.getY();
@@ -177,39 +187,33 @@ public class BatailleNavale extends FragmentActivity implements
 	 */
 	private static final String TAG = "BatailleNavale";
 
-	private static final FSM fsm = new FSM();
-	private static final State INIT = fsm.state("Initial");
-	private static final State P1_PLACE_BOAT = fsm
-			.state("Player 1 placing boat");
-	private static final State P2_PLACE_BOAT = fsm
-			.state("Player 2 placing boat");
-	private static final State P1_BOATS_PLACED = fsm
-			.state("Player 1 boats placed");
-	private static final State P2_BOATS_PLACED = fsm
-			.state("Player 2 boats placed");
-	private static final State P1_TAKE_SHOT = fsm.state("Player 1 taking shot");
-	private static final State P2_TAKE_SHOT = fsm.state("Player 2 taking shot");
-	private static final State P1_SHOT_TAKEN = fsm.state("Player 1 shot taken");
-	private static final State P2_SHOT_TAKEN = fsm.state("Player 2 shot taken");
-	private static final State P1_OWN_BOATS = fsm.state("Player 1 own boats");
-	private static final State P2_OWN_BOATS = fsm.state("Player 2 own boats");
-	private static final State P1_OWN_BOATS_ST = fsm
+	private final FSM fsm = new FSM("BatailleNavale");
+	private final State INIT = fsm.state("Initial");
+	private final State P1_PLACE_BOAT = fsm.state("Player 1 placing boat");
+	private final State P2_PLACE_BOAT = fsm.state("Player 2 placing boat");
+	private final State P1_BOATS_PLACED = fsm.state("Player 1 boats placed");
+	private final State P2_BOATS_PLACED = fsm.state("Player 2 boats placed");
+	private final State P1_TAKE_SHOT = fsm.state("Player 1 taking shot");
+	private final State P2_TAKE_SHOT = fsm.state("Player 2 taking shot");
+	private final State P1_SHOT_TAKEN = fsm.state("Player 1 shot taken");
+	private final State P2_SHOT_TAKEN = fsm.state("Player 2 shot taken");
+	private final State P1_OWN_BOATS = fsm.state("Player 1 own boats");
+	private final State P2_OWN_BOATS = fsm.state("Player 2 own boats");
+	private final State P1_OWN_BOATS_ST = fsm
 			.state("Player 1 own boats (shot taken)");
-	private static final State P2_OWN_BOATS_ST = fsm
+	private final State P2_OWN_BOATS_ST = fsm
 			.state("Player 2 own boats (shot taken)");
-	private static final State GAME_OVER = fsm.state("Game over");
+	private final State GAME_OVER = fsm.state("Game over");
 
-	static final Event START = fsm.event("Start");
-	static final Event ALL_BOATS_PLACED = fsm.event("All boats placed");
-	static final Event P2_START_PLACING = fsm
-			.event("P2 to start placing boats");
-	static final Event P1_TO_FIRE = fsm.event("P1 to take shot");
-	static final Event P2_TO_FIRE = fsm.event("P2 to take shot");
-	static final Event SHOT_FIRED = fsm.event("Shot fired");
-	static final Event WON = fsm.event("Player won!");
-	static final Event SEE_OWN_BOATS_TOGGLE = fsm
-			.event("Toggle own boats view");
-	static final Event RESET = fsm.event("Reset game");
+	final Event START = fsm.event("Start");
+	final Event ALL_BOATS_PLACED = fsm.event("All boats placed");
+	final Event P2_START_PLACING = fsm.event("P2 to start placing boats");
+	final Event P1_TO_FIRE = fsm.event("P1 to take shot");
+	final Event P2_TO_FIRE = fsm.event("P2 to take shot");
+	final Event SHOT_FIRED = fsm.event("Shot fired");
+	final Event WON = fsm.event("Player won!");
+	final Event SEE_OWN_BOATS_TOGGLE = fsm.event("Toggle own boats view");
+	final Event RESET = fsm.event("Reset game");
 
 	/** Singleton game state. */
 	private GameState gameState = GameState.getGameState();
@@ -237,9 +241,6 @@ public class BatailleNavale extends FragmentActivity implements
 	private final ToggleViewOwnBoatsAction toggleViewOwnBoatsAction = new ToggleViewOwnBoatsAction();
 
 	private void initFSM() {
-		if (fsm.getState() != null)
-			return;
-
 		fsm.reset();
 
 		fsm.rule().initial(INIT).event(START).ok(P1_PLACE_BOAT)
@@ -382,10 +383,13 @@ public class BatailleNavale extends FragmentActivity implements
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
 		squareLayout = new SquareLayout(this);
-
 		// TODO Why is this nec.? Why doesn't invalidate() do the job?
 		squareLayout.setBackgroundColor(Color.BLACK);
 		// squareLayout.invalidate();
+
+		Log.d(TAG,
+				"squareLayout is clickable after creation: "
+						+ squareLayout.isClickable());
 
 		frameLayout.addView(squareLayout, squareLayoutParams);
 
@@ -395,7 +399,6 @@ public class BatailleNavale extends FragmentActivity implements
 				handleActionButtonClick(v);
 			}
 		});
-		gameState.setActionButton(actionButton);
 
 		Button resetButton = (Button) findViewById(R.id.resetButton);
 		resetButton.setOnClickListener(new View.OnClickListener() {
@@ -406,64 +409,92 @@ public class BatailleNavale extends FragmentActivity implements
 
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
+		// Restore previous state if any
+		if (savedInstanceState != null) {
+			Log.d(TAG, "savedInstanceState: " + savedInstanceState);
+
+			// Restore UI state
+			setActionText(savedInstanceState.getCharSequence(ACTION_TEXT));
+			getViewOwnBoatsCheckBox().setChecked(
+					savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
+			squareLayout.setClickable(savedInstanceState
+					.getBoolean(GRID_CLICKABLE));
+			findViewById(R.id.actionButton).setClickable(
+					savedInstanceState.getBoolean(ACTION_BUTTON_CLICKABLE));
+			fsm.forceState(fsm.findStateByName(savedInstanceState
+					.getString(FSM_STATE)));
+
+			// TODO Restore game state (players, ships, fsm…)
+
+		} else {
+			Log.d(TAG, "savedInstanceState is null");
+		}
+
 		// Start ship placement sequence unless game is already in progress
 		Log.d(TAG, "FSM state on create: " + fsm.getState());
 		if (fsm.isState(INIT))
-			fsm.softEvent(START);
+			fsm.event(START);
+
+		Log.d(TAG,
+				"squareLayout is clickable at onCreate end: "
+						+ squareLayout.isClickable());
+
+		Log.d(TAG, "onCreate end");
 	}
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
 		super.onBackPressed();
 		Log.d(TAG, "Back pressed.");
 	}
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
 	}
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		Log.d(TAG, "onPause");
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		Log.d(TAG, "onResume");
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		Log.d(TAG, "onSaveInstanceState");
+
+		// Save UI state
+		outState.putCharSequence(ACTION_TEXT, getActionText());
+		outState.putBoolean(VIEW_OWN_CHECKED, getViewOwnBoatsCheckBox()
+				.isChecked());
+		outState.putBoolean(GRID_CLICKABLE, squareLayout.isClickable());
+		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
+				findViewById(R.id.actionButton).isClickable());
+		outState.putString(FSM_STATE, fsm.getState().getName());
 	}
 
 	@Override
 	protected void onRestart() {
-		// TODO Auto-generated method stub
 		super.onRestart();
 		Log.d(TAG, "onRestart");
 	}
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		Log.d(TAG, "onStart");
 	}
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		Log.d(TAG, "onStop");
 	}
@@ -475,7 +506,8 @@ public class BatailleNavale extends FragmentActivity implements
 	 */
 	void handleActionButtonClick(View view) {
 
-		if (fsm.isStateIn(P1_OWN_BOATS, P1_OWN_BOATS_ST, P2_OWN_BOATS, P2_OWN_BOATS_ST))
+		if (fsm.isStateIn(P1_OWN_BOATS, P1_OWN_BOATS_ST, P2_OWN_BOATS,
+				P2_OWN_BOATS_ST))
 			viewOwnBoatsCheckBoxClear();
 
 		if (fsm.isState(P1_BOATS_PLACED)) {
@@ -494,15 +526,22 @@ public class BatailleNavale extends FragmentActivity implements
 		squareLayout.invalidate();
 	}
 
+	void setClickableActionButton(boolean isClickable) {
+		Button actionButton = (Button) findViewById(R.id.actionButton);
+		actionButton.setClickable(isClickable);
+	}
+
 	/**
 	 * Clears the "view own boats" check box.
 	 * 
 	 * @return
 	 */
 	private void viewOwnBoatsCheckBoxClear() {
-		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
+		getViewOwnBoatsCheckBox().setChecked(false);
+	}
 
-		viewOwnCheckBox.setChecked(false);
+	private CheckBox getViewOwnBoatsCheckBox() {
+		return (CheckBox) findViewById(R.id.ViewOwnCheckBox);
 	}
 
 	/**
@@ -511,16 +550,12 @@ public class BatailleNavale extends FragmentActivity implements
 	 * @return
 	 */
 	private void viewOwnBoatsCheckBoxSetClickable(boolean isClickable) {
-		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
-
-		viewOwnCheckBox.setClickable(isClickable);
+		getViewOwnBoatsCheckBox().setClickable(isClickable);
 	}
 
 	private void viewOwnBoatsCheckBoxSetOnCheckedListener() {
-		CheckBox viewOwnCheckBox = (CheckBox) findViewById(R.id.ViewOwnCheckBox);
-
-		viewOwnCheckBox
-				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+		getViewOwnBoatsCheckBox().setOnCheckedChangeListener(
+				new CheckBox.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
@@ -533,10 +568,19 @@ public class BatailleNavale extends FragmentActivity implements
 		new ResetDialogFragment().show(this.getSupportFragmentManager(), null);
 	}
 
-	void setActionText(String text) {
+	void setActionText(CharSequence charSequence) {
 		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
 
-		actionTextView.setText(text);
+		Log.d(TAG, "setting action text: " + charSequence + "; "
+				+ actionTextView);
+		actionTextView.setText(charSequence);
+		Log.d(TAG, "action text set");
+	}
+
+	private CharSequence getActionText() {
+		TextView actionTextView = (TextView) findViewById(R.id.actionTextView);
+
+		return actionTextView.getText();
 	}
 
 	@Override
@@ -603,14 +647,21 @@ public class BatailleNavale extends FragmentActivity implements
 	private boolean updateUiForBoatPlacement() {
 		Player player = gameState.getPlayerToPlaceBoat();
 
+		Log.d(TAG, "updateUiForBoatPlacement");
+
 		// Player may be null if all boats have been placed by both players, and
 		// the screen is rotated
-		if (player != null)
+		if (player != null) {
+			Log.d(TAG, "set action text: " + player.getName() + " place "
+					+ player.getShipToPlace());
 			setActionText(player.getName() + " place "
 					+ player.getShipToPlace());
-		else
+		} else {
+			Log.d(TAG, "player is null => set action text: Press OK…");
 			setActionText("Press OK to continue");
+		}
 
+		Log.d(TAG, "set squareLayout clickable: " + squareLayout);
 		squareLayout.setClickable(true);
 
 		return true;
@@ -628,18 +679,4 @@ public class BatailleNavale extends FragmentActivity implements
 
 		return true;
 	}
-
-//	@Override
-//	public int describeContents() {
-//		return 0;
-//	}
-//
-//	@Override
-//	public void writeToParcel(Parcel dest, int flags) {
-//		// Write FSM state
-//
-//		// Write game state
-//
-//	}
-
 }

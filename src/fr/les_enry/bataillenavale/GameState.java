@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
-import android.widget.Button;
-
 import fr.les_enry.bataillenavale.Cell.CellState;
+import fr.les_enry.util.fsm.Action;
+import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
-import fr.les_enry.util.fsm.Event;
-import fr.les_enry.util.fsm.Action;
 
 /**
  * Represents current game state.
@@ -26,7 +24,7 @@ class GameState {
 	static final int NB_COLS = 10;
 
 	/** Flying spaghetti monster. */
-	private static FSM fsm = new FSM();
+	private static FSM fsm = new FSM("GameState");
 
 	private static final State INIT = fsm.state("Initial");
 	private static final State BOAT_TO_PLACE = fsm.state("Boat to place");
@@ -51,9 +49,6 @@ class GameState {
 
 	/** Index of player that must place a ship or take a shot. */
 	private int currentPlayer = 1;
-
-	/** Reference to the "OK" button. */
-	private Button actionButton = null;
 
 	/**
 	 * Gets the game state singleton.
@@ -190,7 +185,7 @@ class GameState {
 
 		boardState.updateCells(false);
 
-		actionButton.setClickable(false);
+		batailleNavale.setClickableActionButton(false);
 
 		return getCurrentPlayer();
 	}
@@ -225,15 +220,6 @@ class GameState {
 	}
 
 	/**
-	 * Stores a reference to the action button on the GUI.
-	 * 
-	 * @param actionButton
-	 */
-	void setActionButton(Button actionButton) {
-		this.actionButton = actionButton;
-	}
-
-	/**
 	 * Takes a shot on behalf of the current player.
 	 * 
 	 * @param shot
@@ -253,7 +239,7 @@ class GameState {
 
 		// Only re-enable the action button if the shot was valid
 		// i.e. no exception was thrown above
-		actionButton.setClickable(true);
+		batailleNavale.setClickableActionButton(true);
 
 		return shipHit;
 	}
@@ -286,11 +272,11 @@ class GameState {
 				} else if (player2 != null && player2 != player) {
 					// No more boats for current player
 					batailleNavale
-							.processEvent(BatailleNavale.ALL_BOATS_PLACED);
+							.processEvent(batailleNavale.ALL_BOATS_PLACED);
 				} else {
 					// No more boats to place
 					batailleNavale
-							.processEvent(BatailleNavale.ALL_BOATS_PLACED);
+							.processEvent(batailleNavale.ALL_BOATS_PLACED);
 
 					moreBoatsToPlace = false;
 				}
@@ -343,12 +329,12 @@ class GameState {
 
 
 			if (opponent.checkLost()) {
-				batailleNavale.processEvent(BatailleNavale.WON, current.getName()
+				batailleNavale.processEvent(batailleNavale.WON, current.getName()
 						+ " won!  Game over!");
 
 				moreShotsNeeded = false;
 			} else {
-				batailleNavale.processEvent(BatailleNavale.SHOT_FIRED,
+				batailleNavale.processEvent(batailleNavale.SHOT_FIRED,
 						current.getName() + " turn complete ");
 			}
 		} catch (AlreadyPlayedShotException e) {
