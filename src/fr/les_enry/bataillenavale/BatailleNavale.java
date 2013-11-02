@@ -25,6 +25,7 @@ import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
 //TODO Enable Action Button only when appropriate
+//TODO Fix core on rotation while viewing own boats
 
 //TODO Serialise game state and co so we no longer need it to be a singleton
 //TODO Timeout if no activity and let the screen turn off => remove need for screen lock permission
@@ -247,18 +248,16 @@ public class BatailleNavale extends FragmentActivity implements
 				.action(new Action() {
 					public boolean act(Object... rowColumn) {
 						gameState.processSoftEvent(GameState.START);
-						viewOwnBoatsCheckBoxClear();
-						viewOwnBoatsCheckBoxSetClickable(false);
-						squareLayout.invalidate();
 						return updateUiForBoatPlacement();
 					}
 				});
 		fsm.rule().initial(P1_PLACE_BOAT).event(ALL_BOATS_PLACED)
 				.ok(P1_BOATS_PLACED).action(new Action() {
 					public boolean act() {
-						squareLayout.setClickable(false);
 						displayToast("Press OK when ready.");
 						setActionText("Ships placed.  Press OK.");
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -273,6 +272,8 @@ public class BatailleNavale extends FragmentActivity implements
 					public boolean act() {
 						displayToast("Press OK when ready.");
 						setActionText("Ships placed.  Press OK.");
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -286,6 +287,8 @@ public class BatailleNavale extends FragmentActivity implements
 				.action(new Action() {
 					public boolean act(Object... args) {
 						setActionText((String) args[0]);
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -294,6 +297,8 @@ public class BatailleNavale extends FragmentActivity implements
 					public boolean act(Object... args) {
 						setActionText((String) args[0]);
 						displayToast((String) args[0]);
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -308,6 +313,8 @@ public class BatailleNavale extends FragmentActivity implements
 				.action(new Action() {
 					public boolean act(Object... args) {
 						setActionText((String) args[0]);
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -316,6 +323,8 @@ public class BatailleNavale extends FragmentActivity implements
 					public boolean act(Object... args) {
 						setActionText((String) args[0]);
 						displayToast((String) args[0]);
+						squareLayout.setClickable(false);
+						actionButtonSetClickable(true);
 						return true;
 					}
 				});
@@ -526,7 +535,7 @@ public class BatailleNavale extends FragmentActivity implements
 		squareLayout.invalidate();
 	}
 
-	void setClickableActionButton(boolean isClickable) {
+	void actionButtonSetClickable(boolean isClickable) {
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setClickable(isClickable);
 	}
@@ -662,8 +671,13 @@ public class BatailleNavale extends FragmentActivity implements
 		}
 
 		Log.d(TAG, "set squareLayout clickable: " + squareLayout);
+		actionButtonSetClickable(false);
+		viewOwnBoatsCheckBoxClear();
+		viewOwnBoatsCheckBoxSetClickable(false);
 		squareLayout.setClickable(true);
 
+		squareLayout.invalidate();		
+		
 		return true;
 	}
 
@@ -677,6 +691,9 @@ public class BatailleNavale extends FragmentActivity implements
 
 		setActionText(gameState.nextPlayer().getName() + " doit tirer");
 
+		actionButtonSetClickable(false);
+		squareLayout.setClickable(true);
+		
 		return true;
 	}
 }

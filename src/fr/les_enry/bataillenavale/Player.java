@@ -20,10 +20,10 @@ public class Player {
 	}
 	
 	void addShipsToPlace() {
-//		getShipsToPlace().add(new AircraftCarrier());
-//		getShipsToPlace().add(new Cruiser());
-//		getShipsToPlace().add(new Submarine());
-//		getShipsToPlace().add(new CounterTorpedo());
+		getShipsToPlace().add(new AircraftCarrier());
+		getShipsToPlace().add(new Cruiser());
+		getShipsToPlace().add(new Submarine());
+		getShipsToPlace().add(new CounterTorpedo());
 		getShipsToPlace().add(new Torpedo());	
 	}
 	

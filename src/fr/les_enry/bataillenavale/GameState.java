@@ -185,7 +185,7 @@ class GameState {
 
 		boardState.updateCells(false);
 
-		batailleNavale.setClickableActionButton(false);
+		batailleNavale.actionButtonSetClickable(false);
 
 		return getCurrentPlayer();
 	}
@@ -239,7 +239,7 @@ class GameState {
 
 		// Only re-enable the action button if the shot was valid
 		// i.e. no exception was thrown above
-		batailleNavale.setClickableActionButton(true);
+		batailleNavale.actionButtonSetClickable(true);
 
 		return shipHit;
 	}
