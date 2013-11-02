@@ -24,9 +24,8 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Timeout if no activity and let the screen turn off => remove need for screen lock permission
-
 //TODO Full i18n
+//TODO Blue vs red background for each player
 //TODO "New game"/Reset should move to menu
 
 //TODO Automated tests
@@ -385,7 +384,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		gameState = new GameState();
 		gameState.setBatailleNavale(this);
-		
+
 		initFSM();
 
 		FrameLayout frameLayout = (FrameLayout) this
@@ -434,7 +433,8 @@ public class BatailleNavale extends FragmentActivity implements
 					savedInstanceState.getBoolean(ACTION_BUTTON_CLICKABLE));
 			fsm.forceState(fsm.findStateByName(savedInstanceState
 					.getString(FSM_STATE)));
-			gameState = (GameState) savedInstanceState.getSerializable(GAME_STATE);
+			gameState = (GameState) savedInstanceState
+					.getSerializable(GAME_STATE);
 			gameState.setBatailleNavale(this);
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
@@ -650,6 +650,15 @@ public class BatailleNavale extends FragmentActivity implements
 		toast.show();
 	}
 
+	private void setBackgroundColour(Player player) {
+		View root = findViewById(R.id.root);
+		
+		if (root != null)
+			root.setBackgroundColor(player.getColour());
+		else
+			Log.d(TAG, "root view is null");
+	}
+
 	/**
 	 * Sets the UI up for player to place boats.
 	 * 
@@ -660,26 +669,17 @@ public class BatailleNavale extends FragmentActivity implements
 
 		Log.d(TAG, "updateUiForBoatPlacement");
 
-		// Player may be null if all boats have been placed by both players, and
-		// the screen is rotated
-		if (player != null) {
-			Log.d(TAG, "set action text: " + player.getName() + " place "
-					+ player.getShipToPlace());
-			setActionText(player.getName() + " place "
-					+ player.getShipToPlace());
-		} else {
-			Log.d(TAG, "player is null => set action text: Press OK…");
-			setActionText("Press OK to continue");
-		}
-
-		Log.d(TAG, "set squareLayout clickable: " + squareLayout);
+		setActionText(player.getName() + " place " + player.getShipToPlace());
+		
+//		setBackgroundColour(player);
+		
 		actionButtonSetClickable(false);
 		viewOwnBoatsCheckBoxClear();
 		viewOwnBoatsCheckBoxSetClickable(false);
 		squareLayout.setClickable(true);
 
-		squareLayout.invalidate();		
-		
+		squareLayout.invalidate();
+
 		return true;
 	}
 
@@ -689,13 +689,17 @@ public class BatailleNavale extends FragmentActivity implements
 	 * @return true
 	 */
 	private boolean updateUiForPlayerShot() {
+		Player player = gameState.nextPlayer();
+		
 		viewOwnBoatsCheckBoxSetClickable(true);
 
-		setActionText(gameState.nextPlayer().getName() + " doit tirer");
+		setActionText(player.getName() + " doit tirer");
 
+//		setBackgroundColour(player);
+		
 		actionButtonSetClickable(false);
 		squareLayout.setClickable(true);
-		
+
 		return true;
 	}
 }

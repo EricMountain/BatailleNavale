@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Color;
 import android.util.Log;
 import fr.les_enry.bataillenavale.Cell.CellState;
 import fr.les_enry.util.fsm.Action;
@@ -57,8 +58,8 @@ class GameState implements Serializable {
 	GameState() {
 		Log.d(TAG, "Constructing new game state");
 
-		players.add(new Player("Player 1"));
-		players.add(new Player("Player 2"));
+		players.add(new Player("Player 1", Color.BLUE));
+		players.add(new Player("Player 2", Color.RED));
 
 		initFSM();
 	}

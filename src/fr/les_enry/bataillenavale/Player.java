@@ -18,8 +18,12 @@ public class Player implements Serializable {
 	
 	private boolean isTurn = false;
 	
-	Player(String name) {
+	/** Player's colour.  Opaque black by default. */
+	private int colour = 0xFF000000;
+	
+	Player(String name, int colour) {
 		this.name = name;
+		this.colour = colour;
 		addShipsToPlace();
 	}
 	
@@ -33,6 +37,10 @@ public class Player implements Serializable {
 	
 	String getName() {
 		return name;
+	}
+	
+	int getColour() {
+		return colour;
 	}
 
 	void resetPlayer() {
