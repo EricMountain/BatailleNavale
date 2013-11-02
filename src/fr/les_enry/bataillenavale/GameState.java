@@ -114,6 +114,11 @@ class GameState implements Serializable {
 		fsm.start(INIT);
 	}
 
+	//TODO Remove, only for debugging 
+	State getFSMState() {
+		return fsm.getState();
+	}
+	
 	void processEvent(Event event, Object... args) {
 		fsm.event(event, args);
 	}

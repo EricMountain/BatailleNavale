@@ -437,6 +437,8 @@ public class BatailleNavale extends FragmentActivity implements
 			gameState = (GameState) savedInstanceState
 					.getSerializable(GAME_STATE);
 			gameState.setBatailleNavale(this);
+			
+			Log.d(TAG, "GameState FSM state on restart: " + gameState.getFSMState());
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
 		}
