@@ -1,9 +1,13 @@
 package fr.les_enry.bataillenavale;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public class Player implements Serializable {
+	
+	private static final long serialVersionUID = -5674373709357780733L;
+
 	private String name;
 	
 	private List<Shot> shotsFired = new ArrayList<Shot>();

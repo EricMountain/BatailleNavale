@@ -1,12 +1,19 @@
 package fr.les_enry.bataillenavale;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.util.Log;
 
-class Ship {
+class Ship implements Serializable {
+	
+	/**
+	 * Serialisation version.
+	 */
+	private static final long serialVersionUID = 4120662384007114882L;
+
 	private static final String TAG = "Ship";
 
 	private List<Cell> coordinates = new ArrayList<Cell>();
@@ -19,15 +26,11 @@ class Ship {
 		this.type = type;
 		this.size = size;
 	}
-
-	
 	
 	@Override
 	public String toString() {
 		return type + " [" + size + "]";
 	}
-
-
 
 	List<Shot> getHits() {
 		return hits;
@@ -183,7 +186,9 @@ class Ship {
 }
 
 class AircraftCarrier extends Ship {
-	
+
+	private static final long serialVersionUID = 5855647045433275164L;
+
 	protected AircraftCarrier() {
 		super("Porte-avions", 5);
 	}
@@ -191,6 +196,8 @@ class AircraftCarrier extends Ship {
 
 class Cruiser extends Ship {
 	
+	private static final long serialVersionUID = -2520557646067486769L;
+
 	protected Cruiser() {
 		super("Croiseur", 4);
 	}
@@ -198,6 +205,8 @@ class Cruiser extends Ship {
 
 class Submarine extends Ship {
 	
+	private static final long serialVersionUID = 3206654564812916889L;
+
 	protected Submarine() {
 		super("Sous-marin", 3);
 	}
@@ -205,13 +214,17 @@ class Submarine extends Ship {
 
 class CounterTorpedo extends Ship {
 	
+	private static final long serialVersionUID = -6450453160033396270L;
+
 	protected CounterTorpedo() {
 		super("Contre-torpilleur", 3);
 	}
 }
 
-class Torpedo extends Ship {
-	
+class Torpedo extends Ship {	
+
+	private static final long serialVersionUID = 6695011607129440129L;
+
 	protected Torpedo() {
 		super("Torpilleur", 2);
 	}

@@ -1,5 +1,6 @@
 package fr.les_enry.bataillenavale;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,10 @@ import fr.les_enry.bataillenavale.Cell.CellState;
  * Represents the visible board state.
  * 
  */
-class BoardState {
+class BoardState implements Serializable {
+	
+	private static final long serialVersionUID = -8231230442067621117L;
+
 	/** Tag for logs. **/
 	private static final String TAG = "BoardState";
 

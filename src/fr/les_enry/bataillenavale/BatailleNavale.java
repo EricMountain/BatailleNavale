@@ -56,6 +56,7 @@ public class BatailleNavale extends FragmentActivity implements
 	private static final String GRID_CLICKABLE = "GridClickable";
 	private static final String ACTION_BUTTON_CLICKABLE = "ActionButtonClickable";
 	private static final String FSM_STATE = "FSMState";
+	private static final String GAME_STATE = "GameState";
 
 	/**
 	 * Implements a square layout.
@@ -174,7 +175,10 @@ public class BatailleNavale extends FragmentActivity implements
 				Log.d(TAG, "Touch at: " + x + "," + y + " cell: " + row + ","
 						+ col + " steps: " + rowStep + "," + colStep);
 
-				gameState.processEvent(GameState.CELL_ACTIVATED, row, col);
+				if (row >= GameState.NB_ROWS || col >= GameState.NB_COLS)
+					Log.d(TAG, "Touch is out of bounds, ignoring");
+				else
+					gameState.processEvent(GameState.CELL_ACTIVATED, row, col);
 
 				this.invalidate();
 			}
@@ -217,7 +221,7 @@ public class BatailleNavale extends FragmentActivity implements
 	final Event RESET = fsm.event("Reset game");
 
 	/** Singleton game state. */
-	private GameState gameState = GameState.getGameState();
+	private GameState gameState = null;
 
 	/** Square frame layout. */
 	private FrameLayout squareLayout = null;
@@ -383,7 +387,9 @@ public class BatailleNavale extends FragmentActivity implements
 
 		setContentView(R.layout.activity_bataille_navale);
 
+		gameState = new GameState();
 		gameState.setBatailleNavale(this);
+		
 		initFSM();
 
 		FrameLayout frameLayout = (FrameLayout) this
@@ -432,9 +438,8 @@ public class BatailleNavale extends FragmentActivity implements
 					savedInstanceState.getBoolean(ACTION_BUTTON_CLICKABLE));
 			fsm.forceState(fsm.findStateByName(savedInstanceState
 					.getString(FSM_STATE)));
-
-			// TODO Restore game state (players, ships, fsm…)
-
+			gameState = (GameState) savedInstanceState.getSerializable(GAME_STATE);
+			gameState.setBatailleNavale(this);
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
 		}
@@ -488,6 +493,7 @@ public class BatailleNavale extends FragmentActivity implements
 		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
 				findViewById(R.id.actionButton).isClickable());
 		outState.putString(FSM_STATE, fsm.getState().getName());
+		outState.putSerializable(GAME_STATE, gameState);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package fr.les_enry.bataillenavale;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,13 @@ import android.graphics.Rect;
 /**
  * Simple cell.
  */
-class Cell {
+class Cell implements Serializable {
+	
+	/**
+	 * Serialisation version.
+	 */
+	private static final long serialVersionUID = -2002875558670694473L;
+
 	/** Maps a state to the colour used to represent it. */
 	private static final Map<CellState, Integer> state2Colour;
 

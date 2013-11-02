@@ -1,5 +1,6 @@
 package fr.les_enry.bataillenavale;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,10 @@ import fr.les_enry.util.fsm.State;
 /**
  * Represents current game state.
  */
-class GameState {
+class GameState implements Serializable {
+	
+	private static final long serialVersionUID = 322809421085556089L;
+
 	/** Tag for logs. **/
 	private static final String TAG = "GameState";
 
@@ -39,7 +43,7 @@ class GameState {
 	private static final GameState gameState = new GameState();
 
 	/** Current BatailleNavale activity. */
-	private BatailleNavale batailleNavale;
+	private transient BatailleNavale batailleNavale;
 
 	/** Board representation of the game. */
 	private BoardState boardState = new BoardState(this);
