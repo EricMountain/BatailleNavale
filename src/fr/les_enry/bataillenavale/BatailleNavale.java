@@ -173,7 +173,7 @@ public class BatailleNavale extends FragmentActivity implements
 				if (row >= GameState.NB_ROWS || col >= GameState.NB_COLS)
 					Log.d(TAG, "Touch is out of bounds, ignoring");
 				else
-					gameState.processEvent(GameState.CELL_ACTIVATED, row, col);
+					gameState.processEvent(gameState.CELL_ACTIVATED, row, col);
 
 				this.invalidate();
 			}
@@ -223,7 +223,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 	private class ResetAction extends Action {
 		public boolean act() {
-			gameState.processEvent(GameState.RESET);
+			gameState.processEvent(gameState.RESET);
 			return true;
 		}
 	}
@@ -246,7 +246,8 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(INIT).event(START).ok(P1_PLACE_BOAT)
 				.action(new Action() {
 					public boolean act(Object... rowColumn) {
-						gameState.processSoftEvent(GameState.START);
+						// TODO Why soft event
+						gameState.processSoftEvent(gameState.START);
 						return updateUiForBoatPlacement();
 					}
 				});

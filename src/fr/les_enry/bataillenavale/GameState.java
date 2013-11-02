@@ -29,16 +29,16 @@ class GameState implements Serializable {
 	static final int NB_COLS = 10;
 
 	/** Flying spaghetti monster. */
-	private static FSM fsm = new FSM("GameState");
+	private FSM fsm = new FSM("GameState");
 
-	private static final State INIT = fsm.state("Initial");
-	private static final State BOAT_TO_PLACE = fsm.state("Boat to place");
-	private static final State SHOT_NEEDED = fsm.state("Shot needed");
-	private static final State GAME_OVER = fsm.state("Game over");
+	private final State INIT = fsm.state("Initial");
+	private final State BOAT_TO_PLACE = fsm.state("Boat to place");
+	private final State SHOT_NEEDED = fsm.state("Shot needed");
+	private final State GAME_OVER = fsm.state("Game over");
 
-	static final Event START = fsm.event("Start");
-	static final Event CELL_ACTIVATED = fsm.event("Cell activated");
-	static final Event RESET = fsm.event("Reset game");
+	final Event START = fsm.event("Start");
+	final Event CELL_ACTIVATED = fsm.event("Cell activated");
+	final Event RESET = fsm.event("Reset game");
 
 	/** Current BatailleNavale activity. */
 	private transient BatailleNavale batailleNavale;
