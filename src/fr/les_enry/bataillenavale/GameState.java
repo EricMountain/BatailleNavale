@@ -15,7 +15,7 @@ import fr.les_enry.util.fsm.State;
  * Represents current game state.
  */
 class GameState implements Serializable {
-	
+
 	private static final long serialVersionUID = 322809421085556089L;
 
 	/** Tag for logs. **/
@@ -39,9 +39,6 @@ class GameState implements Serializable {
 	static final Event CELL_ACTIVATED = fsm.event("Cell activated");
 	static final Event RESET = fsm.event("Reset game");
 
-	/** Global game state. */
-	private static final GameState gameState = new GameState();
-
 	/** Current BatailleNavale activity. */
 	private transient BatailleNavale batailleNavale;
 
@@ -55,24 +52,11 @@ class GameState implements Serializable {
 	private int currentPlayer = 1;
 
 	/**
-	 * Gets the game state singleton.
-	 * 
-	 * @return singleton.
-	 */
-	static GameState getGameState() {
-		if (gameState == null) {
-			throw new RuntimeException(
-					"GameState is null - did not expect that!");
-		}
-		return gameState;
-	}
-
-	/**
 	 * Initialises game state with 2 players.
 	 */
 	GameState() {
 		Log.d(TAG, "Constructing new game state");
-		
+
 		players.add(new Player("Player 1"));
 		players.add(new Player("Player 2"));
 
@@ -87,9 +71,9 @@ class GameState implements Serializable {
 	 * Sets up the FSM. Initial state is BOAT_TO_PLACE.
 	 */
 	private void initFSM() {
-		
+
 		fsm.reset();
-		
+
 		fsm.rule().initial(INIT).event(START).ok(BOAT_TO_PLACE);
 		fsm.rule().initial(BOAT_TO_PLACE).event(CELL_ACTIVATED)
 				.ok(BOAT_TO_PLACE).fail(SHOT_NEEDED).action(new Action() {
@@ -331,10 +315,9 @@ class GameState implements Serializable {
 				displayToast("Missed!");
 			}
 
-
 			if (opponent.checkLost()) {
-				batailleNavale.processEvent(batailleNavale.WON, current.getName()
-						+ " won!  Game over!");
+				batailleNavale.processEvent(batailleNavale.WON,
+						current.getName() + " won!  Game over!");
 
 				moreShotsNeeded = false;
 			} else {
@@ -344,8 +327,7 @@ class GameState implements Serializable {
 		} catch (AlreadyPlayedShotException e) {
 			displayToast("Shot already played.");
 		} catch (AlreadyPlayedException e) {
-			displayToast("Already played, it's " + gameState.getOpponent()
-					+ "'s turn.");
+			displayToast("Already played, it's " + getOpponent() + "'s turn.");
 		} catch (CantShootHereException e) {
 			displayToast("You can't shoot yourself!");
 		}

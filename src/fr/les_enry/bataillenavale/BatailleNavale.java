@@ -24,10 +24,6 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Enable Action Button only when appropriate
-//TODO Fix core on rotation while viewing own boats
-
-//TODO Serialise game state and co so we no longer need it to be a singleton
 //TODO Timeout if no activity and let the screen turn off => remove need for screen lock permission
 
 //TODO Full i18n
