@@ -406,8 +406,29 @@ public class BatailleNavale extends FragmentActivity implements
 
 		frameLayout.addView(squareLayout, squareLayoutParams);
 
-		// Restore previous state if any, before any state change listeners are installed,
-		// but after creating squareLayout etc
+		Log.d(TAG,
+				"onCreate, before setting onClickListener: action button clickable: "
+						+ findViewById(R.id.actionButton).isClickable());
+		Button actionButton = (Button) findViewById(R.id.actionButton);
+		actionButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				handleActionButtonClick(v);
+			}
+		});
+
+		Log.d(TAG,
+				"onCreate, after setting onClickListener: action button clickable: "
+						+ findViewById(R.id.actionButton).isClickable());
+
+		Button resetButton = (Button) findViewById(R.id.resetButton);
+		resetButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				handleResetButtonClick(v);
+			}
+		});
+
+		// Restore previous state if any. Needs to be done before installing
+		// viewOwnBoatsCheck.onCheckedListener
 		if (savedInstanceState != null) {
 			Log.d(TAG, "savedInstanceState: " + savedInstanceState);
 
@@ -417,32 +438,20 @@ public class BatailleNavale extends FragmentActivity implements
 					savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
 			squareLayout.setClickable(savedInstanceState
 					.getBoolean(GRID_CLICKABLE));
-			findViewById(R.id.actionButton).setClickable(
-					savedInstanceState.getBoolean(ACTION_BUTTON_CLICKABLE));
+			actionButtonSetClickable(savedInstanceState
+					.getBoolean(ACTION_BUTTON_CLICKABLE));
 			fsm.forceState(fsm.findStateByName(savedInstanceState
 					.getString(FSM_STATE)));
 			gameState = (GameState) savedInstanceState
 					.getSerializable(GAME_STATE);
 			gameState.setBatailleNavale(this);
-			
-			Log.d(TAG, "GameState FSM state on restart: " + gameState.getFSMState());
+
+			Log.d(TAG,
+					"GameState FSM state on restart: "
+							+ gameState.getFSMState());
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
-		}		
-		
-		Button actionButton = (Button) findViewById(R.id.actionButton);
-		actionButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				handleActionButtonClick(v);
-			}
-		});
-
-		Button resetButton = (Button) findViewById(R.id.resetButton);
-		resetButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				handleResetButtonClick(v);
-			}
-		});
+		}
 
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
@@ -480,6 +489,9 @@ public class BatailleNavale extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
+		Log.d(TAG,
+				"onResume: action button clickable: "
+						+ findViewById(R.id.actionButton).isClickable());
 	}
 
 	@Override
@@ -508,6 +520,9 @@ public class BatailleNavale extends FragmentActivity implements
 	protected void onStart() {
 		super.onStart();
 		Log.d(TAG, "onStart");
+		Log.d(TAG,
+				"onStart: action button clickable: "
+						+ findViewById(R.id.actionButton).isClickable());
 	}
 
 	@Override
@@ -546,6 +561,7 @@ public class BatailleNavale extends FragmentActivity implements
 	void actionButtonSetClickable(boolean isClickable) {
 		Button actionButton = (Button) findViewById(R.id.actionButton);
 		actionButton.setClickable(isClickable);
+		Log.d(TAG, "action button set clickable: " + isClickable);
 	}
 
 	/**
@@ -658,7 +674,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 	private void setBackgroundColour(Player player) {
 		View root = findViewById(R.id.root);
-		
+
 		if (root != null)
 			root.setBackgroundColor(player.getColour());
 		else
@@ -676,9 +692,9 @@ public class BatailleNavale extends FragmentActivity implements
 		Log.d(TAG, "updateUiForBoatPlacement");
 
 		setActionText(player.getName() + " place " + player.getShipToPlace());
-		
-//		setBackgroundColour(player);
-		
+
+		// setBackgroundColour(player);
+
 		actionButtonSetClickable(false);
 		viewOwnBoatsCheckBoxClear();
 		viewOwnBoatsCheckBoxSetClickable(false);
@@ -696,13 +712,13 @@ public class BatailleNavale extends FragmentActivity implements
 	 */
 	private boolean updateUiForPlayerShot() {
 		Player player = gameState.nextPlayer();
-		
+
 		viewOwnBoatsCheckBoxSetClickable(true);
 
 		setActionText(player.getName() + " doit tirer");
 
-//		setBackgroundColour(player);
-		
+		// setBackgroundColour(player);
+
 		actionButtonSetClickable(false);
 		squareLayout.setClickable(true);
 
