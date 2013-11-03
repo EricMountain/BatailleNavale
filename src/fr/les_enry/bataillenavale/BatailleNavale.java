@@ -24,7 +24,7 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Full i18n
+//TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 
 //TODO Automated tests
