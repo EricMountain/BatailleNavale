@@ -24,10 +24,7 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Fix crash on view own board, shot taken
-
 //TODO Full i18n
-//TODO Blue vs red background for each player
 //TODO "New game"/Reset should move to menu
 
 //TODO Automated tests
