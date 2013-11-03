@@ -249,7 +249,7 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(INIT).event(START).ok(P1_PLACE_BOAT)
 				.action(new Action() {
 					public boolean act(Object... rowColumn) {
-						// TODO Why soft event
+						// TODO Why soft event?
 						gameState.processSoftEvent(gameState.START);
 						return updateUiForBoatPlacement();
 					}
