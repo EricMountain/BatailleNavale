@@ -54,6 +54,7 @@ public class BatailleNavale extends FragmentActivity implements
 	private static final String ACTION_BUTTON_CLICKABLE = "ActionButtonClickable";
 	private static final String FSM_STATE = "FSMState";
 	private static final String GAME_STATE = "GameState";
+	private static final String CURRENT_BG_COLOUR = "CurrentBgColour";
 
 	/**
 	 * Implements a square layout.
@@ -222,6 +223,9 @@ public class BatailleNavale extends FragmentActivity implements
 
 	/** Square frame layout. */
 	private FrameLayout squareLayout = null;
+	
+	/** Current background colour. */
+	private int currentBackgroundColour = 0xff000000;
 
 	private class ResetAction extends Action {
 		public boolean act() {
@@ -390,8 +394,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		initFSM();
 
-		FrameLayout frameLayout = (FrameLayout) this
-				.findViewById(R.id.FrameLayout);
+		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
 		FrameLayout.LayoutParams squareLayoutParams = new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
@@ -446,6 +449,8 @@ public class BatailleNavale extends FragmentActivity implements
 					.getSerializable(GAME_STATE);
 			gameState.setBatailleNavale(this);
 
+			setBackgroundColour(savedInstanceState.getInt(CURRENT_BG_COLOUR, 0xff000000));
+
 			Log.d(TAG,
 					"GameState FSM state on restart: "
 							+ gameState.getFSMState());
@@ -455,6 +460,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
+		
 		// Start ship placement sequence unless game is already in progress
 		Log.d(TAG, "FSM state on create: " + fsm.getState());
 		if (fsm.isState(INIT))
@@ -507,6 +513,9 @@ public class BatailleNavale extends FragmentActivity implements
 		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
 				findViewById(R.id.actionButton).isClickable());
 		outState.putString(FSM_STATE, fsm.getState().getName());
+		outState.putInt(CURRENT_BG_COLOUR, currentBackgroundColour);
+
+		// Save full game state
 		outState.putSerializable(GAME_STATE, gameState);
 	}
 
@@ -671,14 +680,21 @@ public class BatailleNavale extends FragmentActivity implements
 		Toast toast = Toast.makeText(this, text, duration);
 		toast.show();
 	}
-
+	
 	private void setBackgroundColour(Player player) {
+		setBackgroundColour(player.getColour());
+	}
+	
+	private void setBackgroundColour(int colour) {
+		currentBackgroundColour = colour;
+		
 		View root = findViewById(R.id.root);
-
-		if (root != null)
-			root.setBackgroundColor(player.getColour());
-		else
-			Log.d(TAG, "root view is null");
+		root.setBackgroundColor(colour);
+		
+		View frame = findViewById(R.id.FrameLayout);
+		frame.setBackgroundColor(colour);
+		
+		squareLayout.setBackgroundColor(colour);
 	}
 
 	/**
@@ -693,7 +709,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		setActionText(player.getName() + " place " + player.getShipToPlace());
 
-		// setBackgroundColour(player);
+		setBackgroundColour(player);
 
 		actionButtonSetClickable(false);
 		viewOwnBoatsCheckBoxClear();
@@ -717,7 +733,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		setActionText(player.getName() + " doit tirer");
 
-		// setBackgroundColour(player);
+		setBackgroundColour(player);
 
 		actionButtonSetClickable(false);
 		squareLayout.setClickable(true);

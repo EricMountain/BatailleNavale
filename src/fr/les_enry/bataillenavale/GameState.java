@@ -58,8 +58,8 @@ class GameState implements Serializable {
 	GameState() {
 		Log.d(TAG, "Constructing new game state");
 
-		players.add(new Player("Player 1", Color.BLUE));
-		players.add(new Player("Player 2", Color.RED));
+		players.add(new Player("Player 1", 0xff3a0000));
+		players.add(new Player("Player 2", 0xff060542));
 
 		initFSM();
 	}
