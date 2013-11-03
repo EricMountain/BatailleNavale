@@ -24,6 +24,8 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
+//TODO Fix crash on view own board, shot taken
+
 //TODO Full i18n
 //TODO Blue vs red background for each player
 //TODO "New game"/Reset should move to menu
@@ -404,23 +406,8 @@ public class BatailleNavale extends FragmentActivity implements
 
 		frameLayout.addView(squareLayout, squareLayoutParams);
 
-		Button actionButton = (Button) findViewById(R.id.actionButton);
-		actionButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				handleActionButtonClick(v);
-			}
-		});
-
-		Button resetButton = (Button) findViewById(R.id.resetButton);
-		resetButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				handleResetButtonClick(v);
-			}
-		});
-
-		viewOwnBoatsCheckBoxSetOnCheckedListener();
-
-		// Restore previous state if any
+		// Restore previous state if any, before any state change listeners are installed,
+		// but after creating squareLayout etc
 		if (savedInstanceState != null) {
 			Log.d(TAG, "savedInstanceState: " + savedInstanceState);
 
@@ -441,7 +428,23 @@ public class BatailleNavale extends FragmentActivity implements
 			Log.d(TAG, "GameState FSM state on restart: " + gameState.getFSMState());
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
-		}
+		}		
+		
+		Button actionButton = (Button) findViewById(R.id.actionButton);
+		actionButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				handleActionButtonClick(v);
+			}
+		});
+
+		Button resetButton = (Button) findViewById(R.id.resetButton);
+		resetButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				handleResetButtonClick(v);
+			}
+		});
+
+		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
 		// Start ship placement sequence unless game is already in progress
 		Log.d(TAG, "FSM state on create: " + fsm.getState());
