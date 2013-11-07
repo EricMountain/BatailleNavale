@@ -70,6 +70,7 @@ class GameState implements Serializable {
 	/**
 	 * Sets up the FSM. Initial state is BOAT_TO_PLACE.
 	 */
+	@SuppressWarnings("serial")
 	private void initFSM() {
 
 		fsm.reset();

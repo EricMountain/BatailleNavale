@@ -225,6 +225,9 @@ public class BatailleNavale extends FragmentActivity implements
 	private int currentBackgroundColour = 0xff000000;
 
 	private class ResetAction extends Action {
+
+		private static final long serialVersionUID = 1292901524013404589L;
+
 		public boolean act() {
 			gameState.processEvent(gameState.RESET);
 			return true;
@@ -232,6 +235,9 @@ public class BatailleNavale extends FragmentActivity implements
 	}
 
 	private class ToggleViewOwnBoatsAction extends Action {
+
+		private static final long serialVersionUID = -5644547148071671339L;
+
 		public boolean act(Object... isChecked) {
 			gameState.getBoardState().updateCells((Boolean) isChecked[0]);
 			squareLayout.invalidate();
@@ -243,6 +249,7 @@ public class BatailleNavale extends FragmentActivity implements
 	private final ResetAction resetAction = new ResetAction();
 	private final ToggleViewOwnBoatsAction toggleViewOwnBoatsAction = new ToggleViewOwnBoatsAction();
 
+	@SuppressWarnings("serial")
 	private void initFSM() {
 		fsm.reset();
 
