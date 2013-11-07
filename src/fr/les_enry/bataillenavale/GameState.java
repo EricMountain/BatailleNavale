@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Color;
 import android.util.Log;
 import fr.les_enry.bataillenavale.Cell.CellState;
 import fr.les_enry.util.fsm.Action;
