@@ -47,6 +47,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 	private static final String ACTION_TEXT = "ActionText";
 	private static final String VIEW_OWN_CHECKED = "ViewOwnChecked";
+	private static final String VIEW_OWN_CLICKABLE = "ViewOwnClickable";
 	private static final String GRID_CLICKABLE = "GridClickable";
 	private static final String ACTION_BUTTON_CLICKABLE = "ActionButtonClickable";
 	private static final String FSM_STATE = "FSMState";
@@ -443,6 +444,7 @@ public class BatailleNavale extends FragmentActivity implements
 			setActionText(savedInstanceState.getCharSequence(ACTION_TEXT));
 			getViewOwnBoatsCheckBox().setChecked(
 					savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
+			getViewOwnBoatsCheckBox().setClickable(savedInstanceState.getBoolean(VIEW_OWN_CLICKABLE));
 			squareLayout.setClickable(savedInstanceState
 					.getBoolean(GRID_CLICKABLE));
 			actionButtonSetClickable(savedInstanceState
@@ -513,6 +515,7 @@ public class BatailleNavale extends FragmentActivity implements
 		outState.putCharSequence(ACTION_TEXT, getActionText());
 		outState.putBoolean(VIEW_OWN_CHECKED, getViewOwnBoatsCheckBox()
 				.isChecked());
+		outState.putBoolean(VIEW_OWN_CLICKABLE, getViewOwnBoatsCheckBox().isClickable());
 		outState.putBoolean(GRID_CLICKABLE, squareLayout.isClickable());
 		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
 				findViewById(R.id.actionButton).isClickable());
