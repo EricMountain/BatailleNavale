@@ -24,10 +24,13 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Serialise to persistent storage: on phone, hitting home and then reopening loses in progress game.
+//TODO Serialise to persistent storage? On phone, hitting home and then reopening (sometimes) loses in progress game.
+//TODO Investigate crash on open after update???
 //TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
+//TODO Get rid of Settings menu entry for time being
 
+//TODO Improve layout
 //TODO Automated tests
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
