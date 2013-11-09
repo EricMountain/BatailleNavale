@@ -18,8 +18,9 @@
    height="48"
    width="48"
    inkscape:export-filename="/home/eric/bataillenavale.png"
-   inkscape:export-xdpi="360"
-   inkscape:export-ydpi="360">
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
+   enable-background="new">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -28,10 +29,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="18.604167"
-     inkscape:cx="11.565004"
-     inkscape:cy="24.335924"
+     inkscape:cx="14.351624"
+     inkscape:cy="23.919373"
      inkscape:document-units="px"
-     inkscape:current-layer="layer9"
+     inkscape:current-layer="layer11"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1134"
@@ -388,6 +389,123 @@
          stdDeviation="0.72403135"
          id="feGaussianBlur4181" />
     </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4129">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4131"
+         width="46.741756"
+         height="46.161407"
+         x="-0.076990284"
+         y="0.5055958"
+         ry="3.9581316" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4133">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4135"
+         width="69.458435"
+         height="48.269115"
+         x="-10.792804"
+         y="0.214825"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4137">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4139"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4141">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4143"
+         width="13.228049"
+         height="26.02335"
+         x="-16.296675"
+         y="-4.3735909"
+         ry="2.2313843" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4145">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4147"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4149">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4151"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4153">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4155"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4157">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4159"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4161">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         id="rect4163"
+         width="48.054108"
+         height="48.269115"
+         x="-0.00018085729"
+         y="-0.00018058832"
+         ry="4.1388578" />
+    </clipPath>
+    <filter
+       inkscape:collect="always"
+       id="filter4253">
+      <feBlend
+         inkscape:collect="always"
+         mode="screen"
+         in2="BackgroundImage"
+         id="feBlend4255" />
+    </filter>
   </defs>
   <metadata
      id="metadata7">
@@ -422,7 +540,8 @@
        width="48"
        height="48.053749"
        x="0"
-       y="8.600224e-07" />
+       y="8.600224e-07"
+       clip-path="url(#clipPath4161)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -435,7 +554,8 @@
        width="48"
        height="27.896976"
        x="-6.4561824e-08"
-       y="-0.053750563" />
+       y="-0.053750563"
+       clip-path="url(#clipPath4157)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -447,7 +567,8 @@
        width="48.537514"
        height="49.558788"
        x="13.088466"
-       y="-10.911532" />
+       y="-10.911532"
+       clip-path="url(#clipPath4153)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -458,7 +579,8 @@
        style="fill:url(#linearGradient5293);fill-opacity:1;stroke:none"
        d="m 4.0326455,8.5476579 40.2073395,-0.0017 0.04988,1.3438793 -40.2610894,5.01e-4 z"
        id="path5281"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       clip-path="url(#clipPath4149)" />
   </g>
   <g
      inkscape:label="Submarine"
@@ -469,7 +591,8 @@
        style="fill:url(#linearGradient5421);fill-opacity:1;stroke:none"
        d="M 24.107502,24.18813 -0.10708286,37.698617 -0.1612542,48.267305 48.376259,48.376259 48.267916,38.297873 z"
        id="path5413"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       clip-path="url(#clipPath4145)" />
     <path
        sodipodi:type="arc"
        style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -479,13 +602,15 @@
        sodipodi:rx="6.0739079"
        sodipodi:ry="1.6662934"
        d="m -3.6013441,16.447929 a 6.0739079,1.6662934 0 1 1 -12.1478159,0 6.0739079,1.6662934 0 1 1 12.1478159,0 z"
-       transform="matrix(3.6327434,0,0,1.8548387,59.201459,8.1121251)" />
+       transform="matrix(3.6327434,0,0,1.8548387,59.201459,8.1121251)"
+       clip-path="url(#clipPath4141)" />
     <path
        style="fill:url(#linearGradient5278);fill-opacity:1;stroke:none"
        d="M 9.7290027,33.594625 C 22.698043,29.612909 39.397371,33.978678 37.840985,33.43337 37.011399,24.730624 33.67933,11.29562 32.30459,2.9025764 27.047447,1.1682948 19.883597,1.8009899 16.071668,2.7413222 14.698403,9.9065345 9.3530423,35.200007 9.7290027,33.594625 z"
        id="path5270"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc" />
+       sodipodi:nodetypes="ccccc"
+       clip-path="url(#clipPath4137)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -499,7 +624,8 @@
      style="display:inline">
     <g
        id="g5516"
-       transform="matrix(0.6918398,0,0,1,7.4667101,-0.2150056)">
+       transform="matrix(0.6918398,0,0,1,7.4667101,-0.2150056)"
+       clip-path="url(#clipPath4133)">
       <path
          style="fill:#8e1212;fill-opacity:1;fill-rule:evenodd;stroke:none"
          d="m 31.720387,28.872656 6.005671,5.20284 0.109194,7.073523 -5.787283,0.05846 -4.258566,-2.455273 3.930984,-9.879549 z"
@@ -564,12 +690,43 @@
   <g
      inkscape:groupmode="layer"
      id="layer9"
-     inkscape:label="Top effect">
+     inkscape:label="Top effect"
+     style="display:none">
     <path
-       style="fill:#ffffff;fill-opacity:0.62211984;stroke:none;filter:url(#filter4179)"
+       style="fill:#ffffff;fill-opacity:0.62211986;stroke:none;filter:url(#filter4179)"
        d="m -1.075028,47.462486 0.10750282,-48.26875612 48.10750218,0 0,2.58006712 -46.0111976,0.1612542 0,45.5811858 z"
        id="path4133"
        inkscape:connector-curvature="0"
-       transform="matrix(1.0280766,0,0,1.0456595,0.07897105,-0.52886165)" />
+       transform="matrix(1.0280766,0,0,1.0456595,0.07897105,-0.52886165)"
+       clip-path="url(#clipPath4129)" />
   </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer11"
+     inkscape:label="Top effect 2"
+     style="opacity:1;filter:url(#filter4253)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;opacity:0.72653061"
+       id="rect4166"
+       width="47.999996"
+       height="48.215004"
+       x="-1.014547e-08"
+       y="1.5405098e-07"
+       rx="3.8685651"
+       ry="3.7270298" />
+    <rect
+       ry="3.59407"
+       rx="3.7212734"
+       y="0.80627102"
+       x="1.021276"
+       height="46.494961"
+       width="46.172451"
+       id="rect4168"
+       style="fill:#000000;fill-opacity:1;stroke:none" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="Mask"
+     style="display:inline" />
 </svg>

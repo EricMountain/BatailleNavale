@@ -24,6 +24,7 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
+//TODO Serialise to persistent storage: on phone, hitting home and then reopening loses in progress game.
 //TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 
