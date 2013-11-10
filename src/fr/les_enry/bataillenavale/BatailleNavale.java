@@ -446,15 +446,23 @@ public class BatailleNavale extends FragmentActivity implements
 
 			// Restore UI state
 			setActionText(savedInstanceState.getCharSequence(ACTION_TEXT));
+			
+			// Ensure the view-own-boats check-box has no listener at this point
+			getViewOwnBoatsCheckBox().setOnCheckedChangeListener(null);
+			
 			getViewOwnBoatsCheckBox().setChecked(
 					savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
 			getViewOwnBoatsCheckBox().setClickable(savedInstanceState.getBoolean(VIEW_OWN_CLICKABLE));
+			
 			squareLayout.setClickable(savedInstanceState
 					.getBoolean(GRID_CLICKABLE));
+			
 			actionButtonSetClickable(savedInstanceState
 					.getBoolean(ACTION_BUTTON_CLICKABLE));
+			
 			fsm.forceState(fsm.findStateByName(savedInstanceState
 					.getString(FSM_STATE)));
+			
 			gameState = (GameState) savedInstanceState
 					.getSerializable(GAME_STATE);
 			gameState.setBatailleNavale(this);
@@ -485,8 +493,8 @@ public class BatailleNavale extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-		Log.d(TAG, "Back pressed.");
+		//super.onBackPressed();
+		Log.d(TAG, "Back pressed. (disabled default action)");
 	}
 
 	@Override
@@ -517,13 +525,19 @@ public class BatailleNavale extends FragmentActivity implements
 
 		// Save UI state
 		outState.putCharSequence(ACTION_TEXT, getActionText());
+		
 		outState.putBoolean(VIEW_OWN_CHECKED, getViewOwnBoatsCheckBox()
 				.isChecked());
 		outState.putBoolean(VIEW_OWN_CLICKABLE, getViewOwnBoatsCheckBox().isClickable());
+		
+		
 		outState.putBoolean(GRID_CLICKABLE, squareLayout.isClickable());
+		
 		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
 				findViewById(R.id.actionButton).isClickable());
+		
 		outState.putString(FSM_STATE, fsm.getState().getName());
+		
 		outState.putInt(CURRENT_BG_COLOUR, currentBackgroundColour);
 
 		// Save full game state
