@@ -225,7 +225,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 	/** Square frame layout. */
 	private FrameLayout squareLayout = null;
-	
+
 	/** Current background colour. */
 	private int currentBackgroundColour = 0xff000000;
 
@@ -436,58 +436,91 @@ public class BatailleNavale extends FragmentActivity implements
 			}
 		});
 
-		// Restore previous state if any. Needs to be done before installing
-		// viewOwnBoatsCheck.onCheckedListener
-		if (savedInstanceState != null) {
-			Log.d(TAG, "savedInstanceState: " + savedInstanceState);
+		boolean isRestoredGame = restoreSavedState(savedInstanceState);
 
-			// Restore UI state
-			setActionText(savedInstanceState.getCharSequence(ACTION_TEXT));
-			
-			// Ensure the view-own-boats check-box has no listener at this point
-			getViewOwnBoatsCheckBox().setOnCheckedChangeListener(null);
-			
-			getViewOwnBoatsCheckBox().setChecked(
-					savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
-			getViewOwnBoatsCheckBox().setClickable(savedInstanceState.getBoolean(VIEW_OWN_CLICKABLE));
-			
-			squareLayout.setClickable(savedInstanceState
-					.getBoolean(GRID_CLICKABLE));
-			
-			actionButtonSetClickable(savedInstanceState
-					.getBoolean(ACTION_BUTTON_CLICKABLE));
-			
-			fsm.forceState(fsm.findStateByName(savedInstanceState
-					.getString(FSM_STATE)));
-			
-			gameState = (GameState) savedInstanceState
-					.getSerializable(GAME_STATE);
-
-			setBackgroundColour(savedInstanceState.getInt(CURRENT_BG_COLOUR, 0xff000000));
-
-			Log.d(TAG,
-					"GameState FSM state on restart: "
-							+ gameState.getFSMState());
-		} else {
-			Log.d(TAG, "savedInstanceState is null, create shiny new GameState");
+		if (!isRestoredGame)
 			gameState = new GameState();
-		}
 
 		gameState.setBatailleNavale(this);
-		
+
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
-		
-		// Start ship placement sequence unless game is already in progress
+
+		if (!isRestoredGame)
+			fsm.event(RESET);
+
 		Log.d(TAG, "FSM state on create: " + fsm.getState());
+
+		// Start ship placement sequence unless game is already in progress
 		if (fsm.isState(INIT))
 			fsm.event(START);
 
 		Log.d(TAG, "onCreate end");
 	}
 
+	/**
+	 * Restores saved state if any. If there is no state to restore, or if the
+	 * restore fails, onCreate() will subsequently create a new GameState and
+	 * reset the state of the UI and FSMs.
+	 * 
+	 * @param savedInstanceState
+	 * @return true if state was restored successfully.
+	 */
+	private boolean restoreSavedState(Bundle savedInstanceState) {
+		boolean isRestoredGame = false;
+
+		gameState = null;
+
+		// Restore previous state if any. Needs to be done before installing
+		// viewOwnBoatsCheck.onCheckedListener
+		if (savedInstanceState != null) {
+			Log.d(TAG, "savedInstanceState: " + savedInstanceState);
+
+			try {
+				// Restore UI state
+				setActionText(savedInstanceState.getCharSequence(ACTION_TEXT));
+
+				// Ensure the view-own-boats check-box has no listener at this
+				// point
+				getViewOwnBoatsCheckBox().setOnCheckedChangeListener(null);
+
+				getViewOwnBoatsCheckBox().setChecked(
+						savedInstanceState.getBoolean(VIEW_OWN_CHECKED));
+				getViewOwnBoatsCheckBox().setClickable(
+						savedInstanceState.getBoolean(VIEW_OWN_CLICKABLE));
+
+				squareLayout.setClickable(savedInstanceState
+						.getBoolean(GRID_CLICKABLE));
+
+				actionButtonSetClickable(savedInstanceState
+						.getBoolean(ACTION_BUTTON_CLICKABLE));
+
+				fsm.forceState(fsm.findStateByName(savedInstanceState
+						.getString(FSM_STATE)));
+
+				setBackgroundColour(savedInstanceState.getInt(
+						CURRENT_BG_COLOUR, 0xff000000));
+
+				gameState = (GameState) savedInstanceState
+						.getSerializable(GAME_STATE);
+
+				isRestoredGame = true;
+				Log.d(TAG,
+						"GameState FSM state on restart: "
+								+ gameState.getFSMState());
+
+			} catch (Exception e) {
+				Log.d(TAG, "Exception caught restoring from bundle", e);
+			}
+		} else {
+			Log.d(TAG, "savedInstanceState is null");
+
+		}
+		return isRestoredGame;
+	}
+
 	@Override
 	public void onBackPressed() {
-		//super.onBackPressed();
+		// super.onBackPressed();
 		Log.d(TAG, "Back pressed. (disabled default action)");
 	}
 
@@ -516,19 +549,19 @@ public class BatailleNavale extends FragmentActivity implements
 
 		// Save UI state
 		outState.putCharSequence(ACTION_TEXT, getActionText());
-		
+
 		outState.putBoolean(VIEW_OWN_CHECKED, getViewOwnBoatsCheckBox()
 				.isChecked());
-		outState.putBoolean(VIEW_OWN_CLICKABLE, getViewOwnBoatsCheckBox().isClickable());
-		
-		
+		outState.putBoolean(VIEW_OWN_CLICKABLE, getViewOwnBoatsCheckBox()
+				.isClickable());
+
 		outState.putBoolean(GRID_CLICKABLE, squareLayout.isClickable());
-		
+
 		outState.putBoolean(ACTION_BUTTON_CLICKABLE,
 				findViewById(R.id.actionButton).isClickable());
-		
+
 		outState.putString(FSM_STATE, fsm.getState().getName());
-		
+
 		outState.putInt(CURRENT_BG_COLOUR, currentBackgroundColour);
 
 		// Save full game state
@@ -693,20 +726,20 @@ public class BatailleNavale extends FragmentActivity implements
 		Toast toast = Toast.makeText(this, text, duration);
 		toast.show();
 	}
-	
+
 	private void setBackgroundColour(Player player) {
 		setBackgroundColour(player.getColour());
 	}
-	
+
 	private void setBackgroundColour(int colour) {
 		currentBackgroundColour = colour;
-		
+
 		View root = findViewById(R.id.root);
 		root.setBackgroundColor(colour);
-		
+
 		View frame = findViewById(R.id.FrameLayout);
 		frame.setBackgroundColor(colour);
-		
+
 		squareLayout.setBackgroundColor(colour);
 	}
 
