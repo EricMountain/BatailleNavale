@@ -398,9 +398,6 @@ public class BatailleNavale extends FragmentActivity implements
 
 		setContentView(R.layout.activity_bataille_navale);
 
-		gameState = new GameState();
-		gameState.setBatailleNavale(this);
-
 		initFSM();
 
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.FrameLayout);
@@ -465,7 +462,6 @@ public class BatailleNavale extends FragmentActivity implements
 			
 			gameState = (GameState) savedInstanceState
 					.getSerializable(GAME_STATE);
-			gameState.setBatailleNavale(this);
 
 			setBackgroundColour(savedInstanceState.getInt(CURRENT_BG_COLOUR, 0xff000000));
 
@@ -473,20 +469,18 @@ public class BatailleNavale extends FragmentActivity implements
 					"GameState FSM state on restart: "
 							+ gameState.getFSMState());
 		} else {
-			Log.d(TAG, "savedInstanceState is null");
+			Log.d(TAG, "savedInstanceState is null, create shiny new GameState");
+			gameState = new GameState();
 		}
 
+		gameState.setBatailleNavale(this);
+		
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
-
 		
 		// Start ship placement sequence unless game is already in progress
 		Log.d(TAG, "FSM state on create: " + fsm.getState());
 		if (fsm.isState(INIT))
 			fsm.event(START);
-
-		Log.d(TAG,
-				"squareLayout is clickable at onCreate end: "
-						+ squareLayout.isClickable());
 
 		Log.d(TAG, "onCreate end");
 	}
@@ -513,9 +507,6 @@ public class BatailleNavale extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-		Log.d(TAG,
-				"onResume: action button clickable: "
-						+ findViewById(R.id.actionButton).isClickable());
 	}
 
 	@Override
@@ -554,9 +545,6 @@ public class BatailleNavale extends FragmentActivity implements
 	protected void onStart() {
 		super.onStart();
 		Log.d(TAG, "onStart");
-		Log.d(TAG,
-				"onStart: action button clickable: "
-						+ findViewById(R.id.actionButton).isClickable());
 	}
 
 	@Override
