@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Bataille Navale</string>
@@ -11,5 +10,6 @@
     <string name="dialog_reset_game">Reset game?</string>
     <string name="player">Player</string>
     <string name="dummy">&lt;&lt;Info line>> lorem ipsum dolor sit amet lorem ipsum</string>
+    <string name="crash_toast_text">Bataille Navale crashed… sorry. Preparing crash report to send by mail.</string>
 
 </resources>

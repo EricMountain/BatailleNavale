@@ -1,5 +1,7 @@
 package fr.les_enry.bataillenavale;
 
+import org.acra.ACRA;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,8 +26,9 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
+//TODO Investigate crash on open after 1 day has gone by…
+//TODO Make FSM log to proper logging fwk iso System.out.
 //TODO Serialise to persistent storage? On phone, hitting home and then reopening (sometimes) loses in progress game.
-//TODO Investigate crash on open after update???
 //TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 //TODO Get rid of Settings menu entry for time being
@@ -453,7 +456,7 @@ public class BatailleNavale extends FragmentActivity implements
 		// Start ship placement sequence unless game is already in progress
 		if (fsm.isState(INIT))
 			fsm.event(START);
-
+		
 		Log.d(TAG, "onCreate end");
 	}
 
@@ -510,11 +513,13 @@ public class BatailleNavale extends FragmentActivity implements
 
 			} catch (Exception e) {
 				Log.d(TAG, "Exception caught restoring from bundle", e);
+				ACRA.getErrorReporter().handleSilentException(e);
 			}
 		} else {
 			Log.d(TAG, "savedInstanceState is null");
 
 		}
+		
 		return isRestoredGame;
 	}
 
