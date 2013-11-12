@@ -26,15 +26,16 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Investigate crash on open after 1 day has gone by…
+//TODO Investigate crash on open after 1 day has gone by… <= Check fix making BaseType Serialisable works.
+//TODO Check redraw issue in emulator.  Missing invalidate()s?
 //TODO Make FSM log to proper logging fwk iso System.out.
-//TODO Serialise to persistent storage? On phone, hitting home and then reopening (sometimes) loses in progress game.
 //TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 //TODO Get rid of Settings menu entry for time being
 
 //TODO Improve layout
 //TODO Automated tests
+//TODO Serialise to persistent storage? On phone, hitting home and then reopening (sometimes) loses in progress game.
 //TODO Bluetooth game
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
