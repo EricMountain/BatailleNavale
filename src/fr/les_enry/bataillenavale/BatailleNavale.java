@@ -371,6 +371,7 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(P2_OWN_BOATS_ST).event(SEE_OWN_BOATS_TOGGLE)
 				.ok(P2_SHOT_TAKEN).action(toggleViewOwnBoatsAction);
 
+		// Reset from any state to init
 		fsm.rule().initial(INIT).event(RESET).ok(INIT);
 		fsm.rule().initial(P1_PLACE_BOAT).event(RESET).ok(INIT)
 				.action(resetAction);
@@ -383,6 +384,18 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(P1_OWN_BOATS).event(RESET).ok(INIT)
 				.action(resetAction);
 		fsm.rule().initial(P2_OWN_BOATS).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P1_BOATS_PLACED).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_BOATS_PLACED).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P1_SHOT_TAKEN).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_SHOT_TAKEN).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P1_OWN_BOATS_ST).event(RESET).ok(INIT)
+				.action(resetAction);
+		fsm.rule().initial(P2_OWN_BOATS_ST).event(RESET).ok(INIT)
 				.action(resetAction);
 		fsm.rule().initial(GAME_OVER).event(RESET).ok(INIT).action(resetAction);
 
@@ -456,7 +469,7 @@ public class BatailleNavale extends FragmentActivity implements
 		// Start ship placement sequence unless game is already in progress
 		if (fsm.isState(INIT))
 			fsm.event(START);
-		
+
 		Log.d(TAG, "onCreate end");
 	}
 
@@ -519,7 +532,7 @@ public class BatailleNavale extends FragmentActivity implements
 			Log.d(TAG, "savedInstanceState is null");
 
 		}
-		
+
 		return isRestoredGame;
 	}
 
