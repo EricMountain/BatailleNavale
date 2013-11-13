@@ -27,7 +27,6 @@ import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
 //TODO Check redraw issue in emulator.  Missing invalidate()s?
-//TODO Make FSM log to proper logging fwk iso System.out.
 //TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 //TODO Get rid of Settings menu entry for time being
