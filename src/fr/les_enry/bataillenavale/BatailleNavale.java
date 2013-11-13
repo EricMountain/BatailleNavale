@@ -26,7 +26,6 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Investigate crash on open after 1 day has gone by… <= Check fix making BaseType Serialisable works.
 //TODO Check redraw issue in emulator.  Missing invalidate()s?
 //TODO Make FSM log to proper logging fwk iso System.out.
 //TODO Full i18n, better messages
