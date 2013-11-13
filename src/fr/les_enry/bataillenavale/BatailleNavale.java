@@ -509,7 +509,7 @@ public class BatailleNavale extends FragmentActivity implements
 				actionButtonSetClickable(savedInstanceState
 						.getBoolean(ACTION_BUTTON_CLICKABLE));
 
-				fsm.forceState(fsm.findStateByName(savedInstanceState
+				fsm.start(fsm.findStateByName(savedInstanceState
 						.getString(FSM_STATE)));
 
 				setBackgroundColour(savedInstanceState.getInt(
