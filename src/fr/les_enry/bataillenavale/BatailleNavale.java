@@ -222,7 +222,7 @@ public class BatailleNavale extends FragmentActivity implements
 	final Event SEE_OWN_BOATS_TOGGLE = fsm.event("Toggle own boats view");
 	final Event RESET = fsm.event("Reset game");
 
-	/** Singleton game state. */
+	/** Game state. */
 	private GameState gameState = null;
 
 	/** Square frame layout. */
