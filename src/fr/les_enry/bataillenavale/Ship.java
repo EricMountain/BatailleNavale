@@ -154,8 +154,6 @@ class Ship implements Serializable {
 			}
 		}
 		
-		// TODO Think equals is supposed to be true if the objects are one and the same?  OR is it 
-		// just some kind of equivalence?  Shouldn't we rather implement Comparable?
 		for (Cell coordinate : coordinates) {
 			if (coordinate.equals(shot)) {
 				Log.d(TAG, this + " has been hit by this shot");
