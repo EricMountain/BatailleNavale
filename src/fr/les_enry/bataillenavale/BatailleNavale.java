@@ -26,7 +26,6 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Check redraw issue in emulator.  Missing invalidate()s?
 //TODO "New game"/Reset should move to menu
 //TODO Get rid of Settings menu entry for time being
 
