@@ -54,11 +54,29 @@ class GameState implements Serializable {
 	/**
 	 * Initialises game state with 2 players.
 	 */
-	GameState() {
+	GameState(BatailleNavale batailleNavale) {
 		Log.d(TAG, "Constructing new game state");
 
-		players.add(new Player("Player 1", 0xff3a0000));
-		players.add(new Player("Player 2", 0xff060542));
+		this.batailleNavale = batailleNavale;
+
+		players.add(new Player(
+				batailleNavale.getString(R.string.player) + " 1",
+				0xff3a0000,
+				new AircraftCarrier(batailleNavale
+						.getString(R.string.aircraft_carrier)),
+				new Cruiser(batailleNavale.getString(R.string.cruiser)),
+				new Submarine(batailleNavale.getString(R.string.submarine)),
+				new CounterTorpedo(batailleNavale.getString(R.string.destroyer)),
+				new Torpedo(batailleNavale.getString(R.string.torpedo_boat))));
+		players.add(new Player(
+				batailleNavale.getString(R.string.player) + " 2",
+				0xff060542,
+				new AircraftCarrier(batailleNavale
+						.getString(R.string.aircraft_carrier)),
+				new Cruiser(batailleNavale.getString(R.string.cruiser)),
+				new Submarine(batailleNavale.getString(R.string.submarine)),
+				new CounterTorpedo(batailleNavale.getString(R.string.destroyer)),
+				new Torpedo(batailleNavale.getString(R.string.torpedo_boat))));
 
 		initFSM();
 	}
@@ -114,11 +132,11 @@ class GameState implements Serializable {
 		fsm.start(INIT);
 	}
 
-	//TODO Remove, only for debugging 
+	// TODO Remove, only for debugging
 	State getFSMState() {
 		return fsm.getState();
 	}
-	
+
 	void processEvent(Event event, Object... args) {
 		fsm.event(event, args);
 	}
@@ -261,7 +279,8 @@ class GameState implements Serializable {
 				Player player2 = testNextToPlace();
 				if (player2 != null && player2 == player) {
 					// More boats for same player
-					batailleNavale.setActionText(player.getName() + " place "
+					batailleNavale.setActionText(player.getName() + ", "
+							+ getString(R.string.place) + " "
 							+ player.getShipToPlace());
 				} else if (player2 != null && player2 != player) {
 					// No more boats for current player
@@ -276,7 +295,7 @@ class GameState implements Serializable {
 				}
 
 			} catch (BadPlacementException e) {
-				displayToast("Can't place the ship there.");
+				displayToast(getString(R.string.cannot_place_here));
 			}
 		} else
 			throw new RuntimeException(
@@ -311,31 +330,33 @@ class GameState implements Serializable {
 				if (shipHit.checkSunk()) {
 					boardState.setCellState(row, column, CellState.SUNK);
 					boardState.updateCells(false);
-					displayToast(shipHit + " sunk!");
+					displayToast(shipHit + " " + getString(R.string.sunk) + "!");
 				} else {
 					boardState.setCellState(row, column, CellState.HIT);
-					displayToast(shipHit + " hit!");
+					displayToast(shipHit + " " + getString(R.string.hit) + "!");
 				}
 			} else {
 				boardState.setCellState(row, column, CellState.MISS);
-				displayToast("Missed!");
+				displayToast(getString(R.string.missed) + "!");
 			}
 
 			if (opponent.checkLost()) {
 				batailleNavale.processEvent(batailleNavale.WON,
-						current.getName() + " won!  Game over!");
+						current.getName() + " " + getString(R.string.won)
+								+ "! " + getString(R.string.game_over));
 
 				moreShotsNeeded = false;
 			} else {
 				batailleNavale.processEvent(batailleNavale.SHOT_FIRED,
-						current.getName() + " turn complete ");
+						current.getName() + " "
+								+ getString(R.string.turn_finished));
 			}
 		} catch (AlreadyPlayedShotException e) {
-			displayToast("Shot already played.");
+			displayToast(getString(R.string.already_shot));
 		} catch (AlreadyPlayedException e) {
-			displayToast("Already played, it's " + getOpponent() + "'s turn.");
+			displayToast(getString(R.string.already_played));
 		} catch (CantShootHereException e) {
-			displayToast("You can't shoot yourself!");
+			displayToast(getString(R.string.cannot_shoot_self));
 		}
 
 		return moreShotsNeeded;
@@ -348,5 +369,9 @@ class GameState implements Serializable {
 	 */
 	private void displayToast(String message) {
 		batailleNavale.displayToast(message);
+	}
+
+	private String getString(int resId) {
+		return batailleNavale.getString(resId);
 	}
 }

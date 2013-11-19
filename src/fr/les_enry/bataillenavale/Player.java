@@ -21,18 +21,22 @@ public class Player implements Serializable {
 	/** Player's colour.  Opaque black by default. */
 	private int colour = 0xFF000000;
 	
-	Player(String name, int colour) {
+	Player(String name, int colour, Ship... ships) {
 		this.name = name;
 		this.colour = colour;
-		addShipsToPlace();
+		
+		addShipsToPlace(ships);
 	}
 	
-	void addShipsToPlace() {
-		getShipsToPlace().add(new AircraftCarrier());
-		getShipsToPlace().add(new Cruiser());
-		getShipsToPlace().add(new Submarine());
-		getShipsToPlace().add(new CounterTorpedo());
-		getShipsToPlace().add(new Torpedo());	
+	void addShipsToPlace(Ship... ships) {
+		for (Ship ship : ships) {
+			shipsToPlace.add(ship);
+		}
+//		getShipsToPlace().add(new AircraftCarrier());
+//		getShipsToPlace().add(new Cruiser());
+//		getShipsToPlace().add(new Submarine());
+//		getShipsToPlace().add(new CounterTorpedo());
+//		getShipsToPlace().add(new Torpedo());	
 	}
 	
 	String getName() {
@@ -44,11 +48,18 @@ public class Player implements Serializable {
 	}
 
 	void resetPlayer() {
-		shotsFired.clear();
-		shipsToPlace.clear();
+		shipsToPlace.addAll(shipsAfloat);
+		shipsToPlace.addAll(shipsSunk);
+		
+		for (Ship ship : shipsToPlace)
+			ship.reset();
+		
 		shipsAfloat.clear();
 		shipsSunk.clear();
-		addShipsToPlace();
+		
+		shotsFired.clear();
+		
+//		addShipsToPlace();
 	}
 	
 	boolean hasShipsToPlace() {

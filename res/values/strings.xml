@@ -1,15 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Bataille Navale</string>
+    <string name="app_name">Naval Battles</string>
     <string name="action_settings">Settings</string>
 
     <string name="reset">Reset</string>
     <string name="ok">OK</string>
     <string name="view_own_board">View own board</string>
-    
     <string name="dialog_reset_game">Reset game?</string>
     <string name="player">Player</string>
     <string name="dummy">&lt;&lt;Info line>> lorem ipsum dolor sit amet lorem ipsum</string>
     <string name="crash_toast_text">Bataille Navale crashed… sorry. Preparing crash report to send by mail.</string>
 
+    <string name="aircraft_carrier">Aircraft carrier</string>
+    <string name="cruiser">Cruiser</string>
+    <string name="submarine">Submarine</string>
+    <string name="destroyer">Destroyer</string>
+    <string name="torpedo_boat">Torpedo boat</string>
+    
+    <string name="hit">hit</string>
+    <string name="sunk">sunk</string>
+    <string name="missed">Missed</string>
+    <string name="won">won</string>
+    <string name="game_over">Game over!</string>
+    <string name="turn_finished">turn finished</string>
+    <string name="already_shot">Shot already taken.</string>
+    <string name="already_played">You have finished your turn, press OK.</string>
+    <string name="cannot_shoot_self">You can\'t shoot yourself!</string>
+    <string name="place">place</string>
+    <string name="cannot_place_here">Can\'t place ship there.</string>
+    <string name="must_shoot">must shoot</string>
 </resources>

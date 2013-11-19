@@ -27,7 +27,6 @@ import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
 //TODO Check redraw issue in emulator.  Missing invalidate()s?
-//TODO Full i18n, better messages
 //TODO "New game"/Reset should move to menu
 //TODO Get rid of Settings menu entry for time being
 
@@ -451,12 +450,7 @@ public class BatailleNavale extends FragmentActivity implements
 			}
 		});
 
-		boolean isRestoredGame = restoreSavedState(savedInstanceState);
-
-		if (!isRestoredGame)
-			gameState = new GameState();
-
-		gameState.setBatailleNavale(this);
+		boolean isRestoredGame = setupGameState(savedInstanceState);
 
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
 
@@ -474,13 +468,13 @@ public class BatailleNavale extends FragmentActivity implements
 
 	/**
 	 * Restores saved state if any. If there is no state to restore, or if the
-	 * restore fails, onCreate() will subsequently create a new GameState and
+	 * restore fails, creates a new GameState and onCreate will subsequently 
 	 * reset the state of the UI and FSMs.
 	 * 
 	 * @param savedInstanceState
 	 * @return true if state was restored successfully.
 	 */
-	private boolean restoreSavedState(Bundle savedInstanceState) {
+	private boolean setupGameState(Bundle savedInstanceState) {
 		boolean isRestoredGame = false;
 
 		gameState = null;
@@ -531,6 +525,11 @@ public class BatailleNavale extends FragmentActivity implements
 			Log.d(TAG, "savedInstanceState is null");
 
 		}
+
+		if (!isRestoredGame)
+			gameState = new GameState(this);
+		else
+			gameState.setBatailleNavale(this);
 
 		return isRestoredGame;
 	}
@@ -770,7 +769,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		Log.d(TAG, "updateUiForBoatPlacement");
 
-		setActionText(player.getName() + " place " + player.getShipToPlace());
+		setActionText(player.getName() + ", " + getString(R.string.place) + " " + player.getShipToPlace());
 
 		setBackgroundColour(player);
 
@@ -794,7 +793,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		viewOwnBoatsCheckBoxSetClickable(true);
 
-		setActionText(player.getName() + " doit tirer");
+		setActionText(player.getName() + " " + getString(R.string.must_shoot));
 
 		setBackgroundColour(player);
 

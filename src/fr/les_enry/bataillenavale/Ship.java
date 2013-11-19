@@ -36,6 +36,11 @@ class Ship implements Serializable {
 		return hits;
 	}
 	
+	void reset() {
+		coordinates.clear();
+		hits.clear();
+	}
+	
 	/**
 	 * Adds a coordinate to the list of coordinates for this ship.
 	 * 
@@ -187,8 +192,12 @@ class AircraftCarrier extends Ship {
 
 	private static final long serialVersionUID = 5855647045433275164L;
 
+	protected AircraftCarrier(String name) {
+		super(name, 5);
+	}
+
 	protected AircraftCarrier() {
-		super("Porte-avions", 5);
+		this("Porte-avions");
 	}
 }
 
@@ -196,8 +205,12 @@ class Cruiser extends Ship {
 	
 	private static final long serialVersionUID = -2520557646067486769L;
 
+	protected Cruiser(String name) {
+		super(name, 4);
+	}
+
 	protected Cruiser() {
-		super("Croiseur", 4);
+		this("Croiseur");
 	}
 }
 
@@ -205,8 +218,12 @@ class Submarine extends Ship {
 	
 	private static final long serialVersionUID = 3206654564812916889L;
 
+	protected Submarine(String name) {
+		super(name, 3);
+	}
+
 	protected Submarine() {
-		super("Sous-marin", 3);
+		this("Sous-marin");
 	}
 }
 
@@ -214,8 +231,12 @@ class CounterTorpedo extends Ship {
 	
 	private static final long serialVersionUID = -6450453160033396270L;
 
+	protected CounterTorpedo(String name) {
+		super(name, 3);
+	}
+
 	protected CounterTorpedo() {
-		super("Contre-torpilleur", 3);
+		this("Contre-torpilleur");
 	}
 }
 
@@ -223,7 +244,11 @@ class Torpedo extends Ship {
 
 	private static final long serialVersionUID = 6695011607129440129L;
 
+	protected Torpedo(String name) {
+		super(name, 2);
+	}
+
 	protected Torpedo() {
-		super("Torpilleur", 2);
+		this("Torpilleur");
 	}
 }

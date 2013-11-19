@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  	<string name="reset">Reset</string>
+
+    <string name="app_name">Bataille Navale</string>
+    <string name="action_settings">Préférences</string>
+    
+    <string name="reset">Reset</string>
     <string name="ok">OK</string>
     <string name="view_own_board">Mes bâteaux</string>
+    <string name="dialog_reset_game">Abandonner la partie?</string>
     <string name="player">Joueur</string>
+    
+    <string name="aircraft_carrier">Porte-avions</string>
+    <string name="cruiser">Croiseur</string>
+    <string name="submarine">Sous-marin</string>
+    <string name="destroyer">Contre-torpilleur</string>
+    <string name="torpedo_boat">Torpilleur</string>
+
+    <string name="hit">touché</string>
+    <string name="sunk">coulé</string>
+    <string name="missed">Râté</string>
+    <string name="won">a gagné</string>
+    <string name="game_over">Game over!</string>
+    <string name="turn_finished">tour fini</string>
+    <string name="already_shot">Tir déjà effectué.</string>
+    <string name="already_played">Tour fini, appuyer sur OK.</string>
+    <string name="cannot_shoot_self">Il ne faut pas se tirer dessus!</string>
+    <string name="place">placer</string>
+    <string name="cannot_place_here">Emplacement inadéquat.</string>
+    <string name="must_shoot">doit tirer</string>
+    
 </resources>
