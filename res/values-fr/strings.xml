@@ -4,7 +4,7 @@
     <string name="app_name">Bataille Navale</string>
     <string name="action_settings">Préférences</string>
     
-    <string name="reset">Reset</string>
+    <string name="reset">Abandon</string>
     <string name="ok">OK</string>
     <string name="view_own_board">Mes bâteaux</string>
     <string name="dialog_reset_game">Abandonner la partie?</string>
