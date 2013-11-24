@@ -209,6 +209,8 @@ public class BatailleNavale extends FragmentActivity implements
 	private final State P2_OWN_BOATS_ST = fsm
 			.state("Player 2 own boats (shot taken)");
 	private final State GAME_OVER = fsm.state("Game over");
+	private final State OWN_BOATS_GO = fsm
+			.state("Own boats (game over)");
 
 	final Event START = fsm.event("Start");
 	final Event ALL_BOATS_PLACED = fsm.event("All boats placed");
@@ -368,6 +370,11 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(P2_OWN_BOATS_ST).event(SEE_OWN_BOATS_TOGGLE)
 				.ok(P2_SHOT_TAKEN).action(toggleViewOwnBoatsAction);
 
+		fsm.rule().initial(OWN_BOATS_GO).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(GAME_OVER).action(toggleViewOwnBoatsAction);
+		fsm.rule().initial(GAME_OVER).event(SEE_OWN_BOATS_TOGGLE)
+				.ok(OWN_BOATS_GO).action(toggleViewOwnBoatsAction);
+		
 		// Reset from any state to init
 		fsm.rule().initial(INIT).event(RESET).ok(INIT);
 		fsm.rule().initial(P1_PLACE_BOAT).event(RESET).ok(INIT)
@@ -467,7 +474,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 	/**
 	 * Restores saved state if any. If there is no state to restore, or if the
-	 * restore fails, creates a new GameState and onCreate will subsequently 
+	 * restore fails, creates a new GameState and onCreate will subsequently
 	 * reset the state of the UI and FSMs.
 	 * 
 	 * @param savedInstanceState
@@ -768,7 +775,8 @@ public class BatailleNavale extends FragmentActivity implements
 
 		Log.d(TAG, "updateUiForBoatPlacement");
 
-		setActionText(player.getName() + ", " + getString(R.string.place) + " " + player.getShipToPlace());
+		setActionText(player.getName() + ", " + getString(R.string.place) + " "
+				+ player.getShipToPlace());
 
 		setBackgroundColour(player);
 
