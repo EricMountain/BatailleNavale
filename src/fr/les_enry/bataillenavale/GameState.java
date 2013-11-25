@@ -130,6 +130,8 @@ class GameState implements Serializable {
 		fsm.rule().initial(GAME_OVER).event(CELL_ACTIVATED).ok(GAME_OVER);
 
 		fsm.start(INIT);
+		
+		Log.d(TAG, fsm.toDag());
 	}
 
 	// TODO Remove, only for debugging

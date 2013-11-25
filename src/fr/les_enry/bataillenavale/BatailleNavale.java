@@ -404,6 +404,8 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(GAME_OVER).event(RESET).ok(INIT).action(resetAction);
 
 		fsm.start(INIT);
+		
+		Log.d(TAG, fsm.toDag());
 	}
 
 	@Override
