@@ -209,8 +209,7 @@ public class BatailleNavale extends FragmentActivity implements
 	private final State P2_OWN_BOATS_ST = fsm
 			.state("Player 2 own boats (shot taken)");
 	private final State GAME_OVER = fsm.state("Game over");
-	private final State OWN_BOATS_GO = fsm
-			.state("Own boats (game over)");
+	private final State OWN_BOATS_GO = fsm.state("Own boats (game over)");
 
 	final Event START = fsm.event("Start");
 	final Event ALL_BOATS_PLACED = fsm.event("All boats placed");
@@ -374,7 +373,10 @@ public class BatailleNavale extends FragmentActivity implements
 				.ok(GAME_OVER).action(toggleViewOwnBoatsAction);
 		fsm.rule().initial(GAME_OVER).event(SEE_OWN_BOATS_TOGGLE)
 				.ok(OWN_BOATS_GO).action(toggleViewOwnBoatsAction);
-		
+
+		fsm.rule().initial(INIT).event(SEE_OWN_BOATS_TOGGLE).ok(INIT)
+				.action(toggleViewOwnBoatsAction);
+
 		// Reset from any state to init
 		fsm.rule().initial(INIT).event(RESET).ok(INIT);
 		fsm.rule().initial(P1_PLACE_BOAT).event(RESET).ok(INIT)
@@ -402,9 +404,11 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.rule().initial(P2_OWN_BOATS_ST).event(RESET).ok(INIT)
 				.action(resetAction);
 		fsm.rule().initial(GAME_OVER).event(RESET).ok(INIT).action(resetAction);
+		fsm.rule().initial(OWN_BOATS_GO).event(RESET).ok(INIT)
+				.action(resetAction);
 
 		fsm.start(INIT);
-		
+
 		Log.d(TAG, fsm.toDag());
 	}
 
@@ -627,7 +631,7 @@ public class BatailleNavale extends FragmentActivity implements
 			fsm.event(P1_TO_FIRE);
 		} else if (fsm.isState(P1_SHOT_TAKEN)) {
 			fsm.event(P2_TO_FIRE);
-		} else if (fsm.isState(GAME_OVER)) {
+		} else if (fsm.isStateIn(GAME_OVER, OWN_BOATS_GO)) {
 			onResetRequest();
 		} else {
 			throw new RuntimeException("Why are we here? FSM state = "
