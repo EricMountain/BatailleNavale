@@ -32,11 +32,6 @@ public class Player implements Serializable {
 		for (Ship ship : ships) {
 			shipsToPlace.add(ship);
 		}
-//		getShipsToPlace().add(new AircraftCarrier());
-//		getShipsToPlace().add(new Cruiser());
-//		getShipsToPlace().add(new Submarine());
-//		getShipsToPlace().add(new CounterTorpedo());
-//		getShipsToPlace().add(new Torpedo());	
 	}
 	
 	String getName() {
