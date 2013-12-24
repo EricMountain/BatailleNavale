@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">Bataille Navale</string>
+    
     <string name="action_settings">Préférences</string>
+    <string name="action_new_game">Nouvelle partie</string>
     
     <string name="reset">Abandon</string>
     <string name="ok">OK</string>

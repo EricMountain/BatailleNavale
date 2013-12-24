@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -458,7 +459,7 @@ public class BatailleNavale extends FragmentActivity implements
 		Button resetButton = (Button) findViewById(R.id.resetButton);
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				handleResetButtonClick(v);
+				handleResetButtonClick();
 			}
 		});
 
@@ -680,7 +681,7 @@ public class BatailleNavale extends FragmentActivity implements
 				});
 	}
 
-	void handleResetButtonClick(View view) {
+	void handleResetButtonClick() {
 		new ResetDialogFragment().show(this.getSupportFragmentManager(), null);
 	}
 
@@ -703,6 +704,16 @@ public class BatailleNavale extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.bataille_navale, menu);
+		
+		MenuItem resetMenuItem = (MenuItem) menu.findItem(R.id.action_new_game);
+		resetMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				handleResetButtonClick();
+				return false;
+			}
+		});
+
 		return true;
 	}
 
