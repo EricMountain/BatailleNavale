@@ -31,20 +31,11 @@
 
     </FrameLayout>
 
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/actionButton"
-        android:layout_alignLeft="@+id/actionButton"
-        android:layout_alignParentRight="true"
-        android:text="@string/reset" />
-
     <CheckBox
         android:id="@+id/ViewOwnCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/resetButton"
+        android:layout_above="@+id/actionButton"
         android:layout_alignParentRight="true"
         android:text="@string/view_own_board"
         android:textAppearance="?android:attr/textAppearanceInverse"

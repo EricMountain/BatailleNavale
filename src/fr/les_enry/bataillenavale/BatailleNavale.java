@@ -456,13 +456,6 @@ public class BatailleNavale extends FragmentActivity implements
 				"onCreate, after setting onClickListener: action button clickable: "
 						+ findViewById(R.id.actionButton).isClickable());
 
-		Button resetButton = (Button) findViewById(R.id.resetButton);
-		resetButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				handleResetButtonClick();
-			}
-		});
-
 		boolean isRestoredGame = setupGameState(savedInstanceState);
 
 		viewOwnBoatsCheckBoxSetOnCheckedListener();
