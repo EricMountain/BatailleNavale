@@ -27,16 +27,12 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO "New game"/Reset should move to menu
-//TODO Get rid of Settings menu entry for time being
-
-//TODO Improve layout
-//TODO Automated tests
-//TODO Serialise to persistent storage? On phone, hitting home and then reopening (sometimes) loses in progress game.
 //TODO Bluetooth game
+//TODO Make menu work on devices that don't have a menu button.
+//TODO Automated tests
+//TODO Serialise to persistent storage?
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
-//TODO Game icon
 //TODO Ship placement like Blokish?  Drawing with your finger is nice too though...  Better event handling needed anyway.
 //TODO Animations
 //TODO Setup (sound on/off, animations on/off)
