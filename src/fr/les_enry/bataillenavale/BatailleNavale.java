@@ -27,9 +27,10 @@ import fr.les_enry.util.fsm.Event;
 import fr.les_enry.util.fsm.FSM;
 import fr.les_enry.util.fsm.State;
 
-//TODO Bluetooth game
 //TODO Make menu work on devices that don't have a menu button.
+//TODO Bluetooth game
 //TODO Automated tests
+//TODO Handle back button correctly.  Requires serialising to persistent storage as onSaveInstanceState() isn't called.  Back requests destruction of the activity, hence assumption si no state needs to be saved.
 //TODO Serialise to persistent storage?
 //TODO see how to grey disabled elements
 //TODO Nicer buttons
@@ -538,8 +539,8 @@ public class BatailleNavale extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		// super.onBackPressed();
-		Log.d(TAG, "Back pressed. (disabled default action)");
+		//super.onBackPressed();
+		// Log.d(TAG, "Back pressed. (disabled default action)");
 	}
 
 	@Override
@@ -693,15 +694,16 @@ public class BatailleNavale extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.bataille_navale, menu);
-		
+
 		MenuItem resetMenuItem = (MenuItem) menu.findItem(R.id.action_new_game);
-		resetMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				handleResetButtonClick();
-				return false;
-			}
-		});
+		resetMenuItem
+				.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						handleResetButtonClick();
+						return false;
+					}
+				});
 
 		return true;
 	}
