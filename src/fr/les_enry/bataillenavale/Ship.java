@@ -7,6 +7,9 @@ import java.util.List;
 
 import android.util.Log;
 
+/**
+ * Holds the coordinates occupied by the ship.
+ */
 class Ship implements Serializable {
 	
 	/**

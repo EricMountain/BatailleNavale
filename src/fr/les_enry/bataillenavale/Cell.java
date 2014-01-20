@@ -61,20 +61,11 @@ class Cell implements Serializable {
 		this.column = column;
 	}
 
-	/**
-	 * Get row.
-	 * 
-	 * @return row
-	 */
+
 	public int getRow() {
 		return row;
 	}
 
-	/**
-	 * Get column.
-	 * 
-	 * @return column.
-	 */
 	public int getColumn() {
 		return column;
 	}

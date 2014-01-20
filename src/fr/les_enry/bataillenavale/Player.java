@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Holds ship state, shots fired etc.
+ */
 public class Player implements Serializable {
 	
 	private static final long serialVersionUID = -5674373709357780733L;

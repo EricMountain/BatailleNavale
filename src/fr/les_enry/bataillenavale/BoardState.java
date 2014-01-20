@@ -32,7 +32,7 @@ class BoardState implements Serializable {
 	private boolean isPlayerViewShootable = false;
 
 	/**
-	 * Constructor.
+	 * Sets the board up; defines size and creates the cells.
 	 * 
 	 * @param gameState
 	 */

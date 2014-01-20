@@ -75,7 +75,7 @@ public class BatailleNavale extends FragmentActivity implements
 		private Rect viewPort = new Rect();
 
 		/**
-		 * Constuctor.
+		 * Sets up the painter.
 		 * 
 		 * @param context
 		 */
@@ -150,7 +150,7 @@ public class BatailleNavale extends FragmentActivity implements
 
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			// TODO fix event handling to handle "clicks"
+			// TODO fix event handling to handle taps
 
 			// For the time being, only deal with "up" events
 			int action = event.getActionMasked();
@@ -185,9 +185,6 @@ public class BatailleNavale extends FragmentActivity implements
 		}
 	}
 
-	/**
-	 * Logging tag.
-	 */
 	private static final String TAG = "BatailleNavale";
 
 	private final FSM fsm = new FSM("BatailleNavale");
@@ -228,6 +225,9 @@ public class BatailleNavale extends FragmentActivity implements
 	/** Current background colour. */
 	private int currentBackgroundColour = 0xff000000;
 
+	/**
+	 * Resets the FSM.
+	 */
 	private class ResetAction extends Action {
 
 		private static final long serialVersionUID = 1292901524013404589L;
@@ -238,6 +238,9 @@ public class BatailleNavale extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * Toggles between the standard and "own boats" view.
+	 */
 	private class ToggleViewOwnBoatsAction extends Action {
 
 		private static final long serialVersionUID = -5644547148071671339L;
@@ -638,11 +641,6 @@ public class BatailleNavale extends FragmentActivity implements
 		Log.d(TAG, "action button set clickable: " + isClickable);
 	}
 
-	/**
-	 * Clears the "view own boats" check box.
-	 * 
-	 * @return
-	 */
 	private void viewOwnBoatsCheckBoxClear() {
 		getViewOwnBoatsCheckBox().setChecked(false);
 	}
@@ -651,11 +649,6 @@ public class BatailleNavale extends FragmentActivity implements
 		return (CheckBox) findViewById(R.id.ViewOwnCheckBox);
 	}
 
-	/**
-	 * Enables/disables the "view own boats" check box.
-	 * 
-	 * @return
-	 */
 	private void viewOwnBoatsCheckBoxSetClickable(boolean isClickable) {
 		getViewOwnBoatsCheckBox().setClickable(isClickable);
 	}
@@ -744,12 +737,6 @@ public class BatailleNavale extends FragmentActivity implements
 		fsm.softEvent(event);
 	}
 
-	/**
-	 * Display a toast.
-	 * 
-	 * @param text
-	 *            Text to display.
-	 */
 	void displayToast(CharSequence text) {
 		int duration = Toast.LENGTH_SHORT;
 
